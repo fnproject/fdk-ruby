@@ -14,12 +14,12 @@ module FDK
             # TODO:
         else
             c = Context.new()
-            i = {my: "input"}    
-            FDK.single_event(func, c, i)
+            payload = STDIN.read
+            FDK.single_event(func, c, payload)
         end
     end
     def self.single_event(func, c, i)
         o = send func, c, i
-        return o
+        puts o
     end
 end

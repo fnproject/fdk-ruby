@@ -43,3 +43,9 @@ def call(context, input)
 end
 ```
 
+## Example in root dir
+
+```sh
+echo '{"yo":"dawg"}' | fn run
+```
+
