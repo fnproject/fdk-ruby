@@ -38,14 +38,26 @@ require 'fdk'
 
 def call(context, input) 
     # Do some work here
-    STDERR.puts "input: " + input
-    return "I got: " + input + "!"
+    return "Hello " + input + "!"
 end
 ```
 
 ## Example in root dir
 
 ```sh
-echo '{"yo":"dawg"}' | fn run
+echo '{"name":"coolio"}' | fn run
 ```
 
+```sh
+fn deploy --app myapp --local
+echo '{"name":"coolio"}' | fn call myapp /fdk-ruby
+```
+
+Change to hot:
+
+Update func.yaml: `format: json`
+
+```sh
+fn deploy --app myapp --local
+ruby loop.rb
+```

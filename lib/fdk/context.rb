@@ -4,7 +4,7 @@ module FDK
         # fixed
         attr_accessor :app_name, :path, :format, :memory, :type, :config
         # per request
-        attr_accessor :request_url, :call_id, :headers
+        attr_accessor :request_url, :call_id, :headers, :content_type
 
         # FN_REQUEST_URL - the full URL for the request (parsing example)
         # FN_APP_NAME - the name of the application that matched this route, eg: myapp
@@ -19,17 +19,40 @@ module FDK
         # FN_PARAM_$Y
 
         def initialize()
-            config = {}
+            @config = {}
+            @headers = {}
             ENV.each_pair do |k,v|
-                puts "#{k}: #{v}"
+                STDERR.puts "#{k}: #{v}"
                 if k.start_with? "FN_"
-                    k2 = k[3..-1].downcase
+                    k3 = k[3..-1]
+                    if k3.start_with? "HEADER_"
+                        STDERR.puts "header: #{k3}"
+                        k4 = k3[7..-1]
+                        STDERR.puts k4
+                        @headers[k4] = v
+                        if k4.downcase == "content_type"
+                            @content_type = v
+                        end
+                        next
+                    end
+                    k2 = k3.downcase
                     self.instance_variable_set("@#{k2}".to_sym, v)                    
                     next
                 end
-                config[k] = v
+                @config[k] = v
             end
-            headers = {}
+        end
+
+        def self.newFromJSON(payload)
+            c = Context.new
+            c.request_url = payload['request_url']
+            c.call_id = payload['call_id']
+            ct = payload['headers']['Content-Type']
+            if ct != nil && ct.length > 0
+                # man, let's make these headers single values...
+                c.content_type = ct[0]
+            end
+            return c
         end
 
         # This returns the per request data, such as headers, request_id, etc
