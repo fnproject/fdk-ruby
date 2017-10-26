@@ -22,13 +22,13 @@ module FDK
             @config = {}
             @headers = {}
             ENV.each_pair do |k,v|
-                STDERR.puts "#{k}: #{v}"
+                # STDERR.puts "#{k}: #{v}"
                 if k.start_with? "FN_"
                     k3 = k[3..-1]
                     if k3.start_with? "HEADER_"
-                        STDERR.puts "header: #{k3}"
+                        # STDERR.puts "header: #{k3}"
                         k4 = k3[7..-1]
-                        STDERR.puts k4
+                        # STDERR.puts k4
                         @headers[k4] = v
                         if k4.downcase == "content_type"
                             @content_type = v

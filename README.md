@@ -61,3 +61,11 @@ Update func.yaml: `format: json`
 fn deploy --app myapp --local
 ruby loop.rb
 ```
+
+## Compare cold and hot
+
+Run
+
+```sh
+ruby loop.rb
+```
