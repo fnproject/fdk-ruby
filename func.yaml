@@ -1,0 +1,5 @@
+name: examples
+version: 0.0.43
+runtime: ruby
+entrypoint: ruby func.rb
+format: json
