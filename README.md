@@ -36,6 +36,12 @@ FDK.call(myfunc)
 ```ruby
 require 'fdk'
 
+def myfunc(context, input)
+    return {message: "Hello World!"}
+end
+
+FDK.handle(:myfunc)
+
 def call(context, input) 
     # Do some work here
     return "Hello " + input + "!"
@@ -58,8 +64,7 @@ Change to hot:
 Update func.yaml: `format: json`
 
 ```sh
-fn deploy --app myapp --local
-ruby loop.rb
+fn deploy --app myapp --local && echo '{"name":"coolio"}' | fn call myapp /fdk-ruby
 ```
 
 ## Compare cold and hot

@@ -31,7 +31,7 @@ module FDK
                             'Content-Type' => 'application/json'
                         },
                         'status_code' => 200,
-                        body: s,
+                        body: s.to_json,
                     }
                     STDOUT.puts response.to_json
                     STDOUT.puts
@@ -50,7 +50,7 @@ module FDK
                 # STDERR.puts "parsing json"
                 body = JSON.parse(body)
             end
-            puts FDK.single_event(func, c, body)
+            puts FDK.single_event(func, c, body).to_json
         else
             raise "Format #{format} not supported in Ruby FDK."
         end
