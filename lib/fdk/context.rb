@@ -71,8 +71,8 @@ module FDK
             payload['content_type']
         end
 
-        def attributes
-            payload['attributes']
+        def protocol
+            payload['protocol']
         end
 
     end

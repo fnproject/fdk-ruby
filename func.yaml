@@ -1,5 +1,5 @@
 name: examples
-version: 0.0.49
+version: 0.0.53
 runtime: ruby
 entrypoint: ruby func.rb
 format: json
