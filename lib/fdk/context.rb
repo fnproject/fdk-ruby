@@ -28,33 +28,6 @@ module FDK
 
         def initialize(payload)
             @payload = payload
-            # @config = {}
-            # @headers = {}
-            # ENV.each_pair do |k,v|
-            #     # STDERR.puts "#{k}: #{v}"
-            #     if k.start_with? "FN_"
-            #         k3 = k[3..-1]
-            #         if k3.start_with? "HEADER_"
-            #             # STDERR.puts "header: #{k3}"
-            #             k4 = k3[7..-1]
-            #             # STDERR.puts k4
-            #             @headers[k4] = v
-            #             if k4.downcase == "content_type"
-            #                 @content_type = v
-            #             end
-            #             next
-            #         end
-            #         k2 = k3.downcase
-            #         self.instance_variable_set("@#{k2}".to_sym, v)                    
-            #         next
-            #     end
-            #     @config[k] = v
-            # end
-        end
-
-        def self.newFromJSON(payload)
-            c = Context.new(payload)
-            return c
         end
 
         def config

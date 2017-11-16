@@ -48,15 +48,14 @@ def call(context, input)
 end
 ```
 
-## Example in root dir
+## Running the example that is in the root directory of this repo
 
 ```sh
 echo '{"name":"coolio"}' | fn run
 ```
 
 ```sh
-fn deploy --app myapp --local
-echo '{"name":"coolio"}' | fn call myapp /fdk-ruby
+fn deploy --app myapp --local && echo '{"name":"coolio"}' | fn call myapp /fdk-ruby
 ```
 
 Change to hot:

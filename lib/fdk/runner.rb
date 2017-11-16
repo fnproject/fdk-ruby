@@ -7,17 +7,25 @@ require 'json'
 module FDK
 
     def self.handle(func)
+        # STDERR.puts `env`
         format = ENV['FN_FORMAT']
-       if format == "json"
+        if format == "json"
             obs = ""
+            endbracket=false
             STDIN.each do |line|
                 # STDERR.puts "LINE: --#{line}--"
                 # STDERR.flush
-                if line.strip == ""
-                    # TODO: this isn't very robust, might break if user input has a blank line. :/
+                ls = line.strip
+                STDERR.puts "ls: #{ls}"
+                if ls == "}"
+                    STDERR.puts "endbracket true"
+                    endbracket=true
+                elsif ls == "" && endbracket
+                    # TODO: this isn't very robust, probably needs to be better :/
+                    STDERR.puts "OBJECT: #{obs}"
                     payload = JSON.parse(obs)
                     # STDERR.puts "payload: #{payload.inspect}"
-                    c = Context.newFromJSON(payload)
+                    c = Context.new(payload)
                     # STDERR.puts "context: " + c.inspect
                     # STDERR.flush
                     body = payload['body']
@@ -37,15 +45,24 @@ module FDK
                     STDOUT.puts
                     STDOUT.flush
                     obs = ""
-                else
-                    obs += line
+                    next
+                else 
+                    endbracket = false
                 end
+                obs += line
             end
         elsif format == "default"
             # TODO: check if content type json, and if so, parse it before passing it in
-            c = Context.new()
             body = STDIN.read
-            # STDERR.puts "ct: #{c.content_type}"
+            payload = {}
+            payload['call_id'] = ENV['FN_CALL_ID']
+            payload['content_type'] = ENV['FN_HEADER_Content_Type']
+            payload['protocol'] = {
+                'type' => 'http',
+                'request_url' => ENV['FN_REQUEST_URL']
+            }
+            # STDERR.puts "payload: #{payload}"
+            c = Context.new(payload)
             if c.content_type == "application/json"
                 # STDERR.puts "parsing json"
                 body = JSON.parse(body)
