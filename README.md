@@ -31,26 +31,29 @@ Then simply pass that function to the FDK:
 FDK.call(myfunc)
 ```
 
-## Example
+## Full Example
 
 ```ruby
 require 'fdk'
 
-def call(context, input) 
-    # Do some work here
-    return "Hello " + input + "!"
+def myhandler(context, input)
+    STDERR.puts "request_url: " + context.protocol['request_url']
+    STDERR.puts "call_id: " + context.call_id
+    STDERR.puts "input: " + input.to_s
+    return {message: "Hello " + input['name'].to_s + "!"}
 end
+
+FDK.handle(:myhandler)
 ```
 
-## Example in root dir
+## Running the example that is in the root directory of this repo
 
 ```sh
 echo '{"name":"coolio"}' | fn run
 ```
 
 ```sh
-fn deploy --app myapp --local
-echo '{"name":"coolio"}' | fn call myapp /fdk-ruby
+fn deploy --app myapp --local && echo '{"name":"coolio"}' | fn call myapp /fdk-ruby
 ```
 
 Change to hot:
@@ -58,8 +61,7 @@ Change to hot:
 Update func.yaml: `format: json`
 
 ```sh
-fn deploy --app myapp --local
-ruby loop.rb
+fn deploy --app myapp --local && echo '{"name":"coolio"}' | fn call myapp /fdk-ruby
 ```
 
 ## Compare cold and hot
