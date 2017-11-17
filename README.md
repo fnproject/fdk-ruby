@@ -31,21 +31,19 @@ Then simply pass that function to the FDK:
 FDK.call(myfunc)
 ```
 
-## Example
+## Full Example
 
 ```ruby
 require 'fdk'
 
-def myfunc(context, input)
-    return {message: "Hello World!"}
+def myhandler(context, input)
+    STDERR.puts "request_url: " + context.protocol['request_url']
+    STDERR.puts "call_id: " + context.call_id
+    STDERR.puts "input: " + input.to_s
+    return {message: "Hello " + input['name'].to_s + "!"}
 end
 
-FDK.handle(:myfunc)
-
-def call(context, input) 
-    # Do some work here
-    return "Hello " + input + "!"
-end
+FDK.handle(:myhandler)
 ```
 
 ## Running the example that is in the root directory of this repo
