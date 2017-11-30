@@ -16,13 +16,13 @@ module FDK
                 # STDERR.puts "LINE: --#{line}--"
                 # STDERR.flush
                 ls = line.strip
-                STDERR.puts "ls: #{ls}"
+                # STDERR.puts "ls: #{ls}"
                 if ls == "}"
-                    STDERR.puts "endbracket true"
+                    # STDERR.puts "endbracket true"
                     endbracket=true
                 elsif ls == "" && endbracket
                     # TODO: this isn't very robust, probably needs to be better :/
-                    STDERR.puts "OBJECT: #{obs}"
+                    # STDERR.puts "OBJECT: #{obs}"
                     payload = JSON.parse(obs)
                     # STDERR.puts "payload: #{payload.inspect}"
                     c = Context.new(payload)
