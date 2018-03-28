@@ -3,29 +3,30 @@
 # Responds with output
 
 require 'json'
+require 'yajl'
 
 module FDK
   def self.handle(func)
     format = ENV['FN_FORMAT']
     if format == 'json'
-      payload = JSON.parse(STDIN.read)
-      ctx = Context.new(payload)
-      body = payload['body']
-      if ctx.content_type == 'application/json' && body != ''
-        body = JSON.parse(body)
+      Yajl::Parser.new.parse(STDIN) do |payload|
+        context = Context.new(payload)
+        body = payload['body']
+        if context.content_type == 'application/json' && body != ''
+          body = JSON.parse(body)
+        end
+        se = FDK.single_event(func, context, body)
+        response = {
+          headers: {
+            'Content-Type' => 'application/json',
+          },
+          'status_code' => 200,
+          body: se.to_json,
+        }
+        STDOUT.puts response.to_json
+        STDOUT.puts
+        STDOUT.flush
       end
-      # TODO: begin/rescue so we can respond with proper error response and code
-      se = FDK.single_event(func, ctx, body)
-      response = {
-        headers: {
-          'Content-Type' => 'application/json'
-        },
-        'status_code' => 200,
-        body: se.to_json
-      }
-      STDOUT.puts response.to_json
-      STDOUT.puts
-      STDOUT.flush
     elsif format == 'default'
       body = STDIN.read
       payload = {}
@@ -33,7 +34,7 @@ module FDK
       payload['content_type'] = ENV['FN_HEADER_Content_Type']
       payload['protocol'] = {
         'type' => 'http',
-        'request_url' => ENV['FN_REQUEST_URL']
+        'request_url' => ENV['FN_REQUEST_URL'],
       }
       c = Context.new(payload)
       body = JSON.parse(body) if c.content_type == 'application/json'
