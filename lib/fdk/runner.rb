@@ -10,13 +10,13 @@ module FDK
     format = ENV['FN_FORMAT']
     if format == 'json'
       parser = Yajl::Parser.new
+
       parser.on_parse_complete = lambda do |payload|
         context = Context.new(payload)
         body = payload['body']
         if context.content_type == 'application/json' && body != ''
           body = Yajl::Parser.parse(body)
         end
-        STDERR.puts "body: #{body}"
         se = FDK.single_event(func, context, body)
         response = {
           headers: {
@@ -29,7 +29,9 @@ module FDK
         STDOUT.puts
         STDOUT.flush
       end
+
       STDIN.each_line { |line| parser.parse_chunk(line) }
+
     elsif format == 'default'
       body = STDIN.read
       payload = {}
