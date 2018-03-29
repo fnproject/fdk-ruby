@@ -9,12 +9,15 @@ module FDK
   def self.handle(func)
     format = ENV['FN_FORMAT']
     if format == 'json'
-      Yajl::Parser.new.parse(STDIN) do |payload|
+      parser = Yajl::Parser.new
+      parser.on_parse_complete = lambda do |payload|
+        STDERR.puts "payload: #{payload}"
         context = Context.new(payload)
         body = payload['body']
         if context.content_type == 'application/json' && body != ''
           body = JSON.parse(body)
         end
+        STDERR.puts "body: #{body}"
         se = FDK.single_event(func, context, body)
         response = {
           headers: {
@@ -23,10 +26,12 @@ module FDK
           'status_code' => 200,
           body: se.to_json,
         }
+        STDERR.puts "response: #{response}"
         STDOUT.puts response.to_json
         STDOUT.puts
         STDOUT.flush
       end
+      STDIN.each_line { |line| parser.parse_chunk(line) }
     elsif format == 'default'
       body = STDIN.read
       payload = {}
@@ -45,6 +50,7 @@ module FDK
   end
 
   def self.single_event(func, context, input)
+    STDERR.puts "input sent: #{input}"
     send func, context, input
   end
 end
