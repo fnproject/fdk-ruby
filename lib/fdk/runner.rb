@@ -11,22 +11,20 @@ module FDK
     if format == 'json'
       parser = Yajl::Parser.new
       parser.on_parse_complete = lambda do |payload|
-        STDERR.puts "payload: #{payload}"
         context = Context.new(payload)
         body = payload['body']
         if context.content_type == 'application/json' && body != ''
-          body = JSON.parse(body)
+          body = Yajl::Parser.parse(body)
         end
         STDERR.puts "body: #{body}"
         se = FDK.single_event(func, context, body)
         response = {
           headers: {
-            'Content-Type' => 'application/json',
+            'Content-Type' => 'application/json'
           },
           'status_code' => 200,
-          body: se.to_json,
+          body: se.to_json
         }
-        STDERR.puts "response: #{response}"
         STDOUT.puts response.to_json
         STDOUT.puts
         STDOUT.flush
@@ -39,10 +37,10 @@ module FDK
       payload['content_type'] = ENV['FN_HEADER_Content_Type']
       payload['protocol'] = {
         'type' => 'http',
-        'request_url' => ENV['FN_REQUEST_URL'],
+        'request_url' => ENV['FN_REQUEST_URL']
       }
       c = Context.new(payload)
-      body = JSON.parse(body) if c.content_type == 'application/json'
+      body = Yajl::Parser.parse(body) if c.content_type == 'application/json'
       puts FDK.single_event(func, c, body).to_json
     else
       raise "Format '#{format}' not supported in Ruby FDK."
@@ -50,7 +48,6 @@ module FDK
   end
 
   def self.single_event(func, context, input)
-    STDERR.puts "input sent: #{input}"
     send func, context, input
   end
 end
