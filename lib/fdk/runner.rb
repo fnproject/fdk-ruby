@@ -11,8 +11,6 @@ module FDK
         format = ENV['FN_FORMAT']
         if format == "json"
             obs = ""
-
-            stack_count = 0
             end_count = 0
             STDIN.each_char do |c|
                 # STDERR.puts "c: #{c}"
