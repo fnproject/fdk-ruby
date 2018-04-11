@@ -11,49 +11,40 @@ module FDK
         format = ENV['FN_FORMAT']
         if format == "json"
             obs = ""
-            first_bracket = false
-            # end_bracket=false
+
             stack_count = 0
+            end_count = 0
             STDIN.each_char do |c|
                 # STDERR.puts "c: #{c}"
-                if c == '{'
-                    if !first_bracket
-                        # STDERR.puts "setting first_bracket"
-                        first_bracket = true
-                    end
-                    stack_count += 1
-                elsif c == '}'
-                    stack_count -= 1
+                if c.ord == 10
+                    end_count += 1
                 end
-                if first_bracket
-                    # STDERR.puts "in first_bracket stack_count: #{stack_count}"
-                    obs += c
-                    if stack_count == 0 # found last bracket, so close this out
-                        # STDERR.puts "OBJECT: #{obs}"
-                        payload = JSON.parse(obs)
-                        # STDERR.puts "payload: #{payload.inspect}"
-                        ctx = Context.new(payload)
-                        # STDERR.puts "context: " + ctx.inspect
-                        # STDERR.flush
-                        body = payload['body']
-                        if ctx.content_type == 'application/json' && body != ""
-                            body = JSON.parse(body)
-                        end
-                        # TODO: begin/rescue so we can respond with proper error response and code
-                        se = FDK.single_event(func, ctx, body)
-                        response = {
-                            headers: {
-                                'Content-Type' => 'application/json'
-                            },
-                            'status_code' => 200,
-                            body: se.to_json,
-                        }
-                        STDOUT.puts response.to_json
-                        STDOUT.puts
-                        STDOUT.flush
-                        first_bracket = false
-                        obs = ""
+                obs += c
+                if end_count == 2
+                    # STDERR.puts "OBJECT: #{obs}"
+                    payload = JSON.parse(obs)
+                    # STDERR.puts "payload: #{payload.inspect}"
+                    ctx = Context.new(payload)
+                    # STDERR.puts "context: " + ctx.inspect
+                    # STDERR.flush
+                    body = payload['body']
+                    if ctx.content_type == 'application/json' && body != ""
+                        body = JSON.parse(body)
                     end
+                    # TODO: begin/rescue so we can respond with proper error response and code
+                    se = FDK.single_event(func, ctx, body)
+                    response = {
+                        headers: {
+                            'Content-Type' => 'application/json'
+                        },
+                        'status_code' => 200,
+                        body: se.to_json,
+                    }
+                    STDOUT.puts response.to_json
+                    STDOUT.puts
+                    STDOUT.flush
+                    end_count = 0
+                    obs = ""
                 end
             end
 
