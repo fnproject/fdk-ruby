@@ -1,6 +1,6 @@
 # assumes function deployed at least once
 puts `fn routes update myapp /fdk-ruby --format default`
-# sleep 5
+sleep 1
 puts "Cold"
 5.times do |i|
     start = Time.now
