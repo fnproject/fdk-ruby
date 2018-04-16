@@ -1,5 +1,6 @@
 # assumes function deployed at least once
 puts `fn routes update myapp /fdk-ruby --format default`
+sleep 1
 puts "Cold"
 5.times do |i|
     start = Time.now
@@ -8,6 +9,7 @@ puts "Cold"
     puts
 end
 puts `fn routes update myapp /fdk-ruby --format json`
+sleep 1
 puts "Hot"
 5.times do |i|
     start = Time.now
