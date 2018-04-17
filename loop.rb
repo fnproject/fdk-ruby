@@ -4,7 +4,7 @@ sleep 1
 puts "Cold"
 5.times do |i|
     start = Time.now
-    puts `echo '{"name":"dawg #{i}"}' | fn call myapp /fdk-ruby`
+    puts `echo "dawg #{i}" | fn call myapp /fdk-ruby`
     puts "time: #{Time.now - start}"
     puts
 end
