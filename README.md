@@ -28,7 +28,7 @@ end
 Then simply pass that function to the FDK:
 
 ```ruby
-FDK.call(myfunc)
+FDK.handle(myfunction)
 ```
 
 ## Full Example
@@ -36,21 +36,33 @@ FDK.call(myfunc)
 ```ruby
 require 'fdk'
 
-def myhandler(context, input)
+def myfunction(context:, input:)
     STDERR.puts "request_url: " + context.protocol['request_url']
     STDERR.puts "call_id: " + context.call_id
     STDERR.puts "input: " + input.to_s
-    return {message: "Hello " + input['name'].to_s + "!"}
+    { message: "Hello #{input['name']}!" }
 end
 
-FDK.handle(:myhandler)
+FDK.handle(:myfunction)
 ```
 
 ## Running the example that is in the root directory of this repo
 
 ```sh
-echo '{"name":"coolio"}' | fn run
+$ echo '{"name":"coolio"}' | fn run
+{"message":"Hello coolio!"}
 ```
+You can also specify the format (the default is JSON)
+```sh
+$ echo '{"name":"coolio"}' | fn run --format json
+{"message":"Hello coolio!"}
+```
+If you want to just pass plain text to the function, specify a format of __default__:
+```sh
+$ echo 'coolio' | fn run --format default
+{"message":"Hello coolio!"}
+```
+
 
 ```sh
 fn deploy --app myapp --local && echo '{"name":"coolio"}' | fn call myapp /fdk-ruby
