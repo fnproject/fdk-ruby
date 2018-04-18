@@ -33,17 +33,14 @@ module FDK
       STDIN.each_line { |line| parser.parse_chunk(line) }
 
     elsif format == 'default'
-      input = STDIN.read
       payload = {}
       payload['call_id'] = ENV['FN_CALL_ID']
-      payload['content_type'] = ENV['FN_HEADER_Content_Type']
       payload['protocol'] = {
         'type' => 'http',
         'request_url' => ENV['FN_REQUEST_URL']
       }
       c = Context.new(payload)
-      body = (c.content_type == 'application/json') ? Yajl::Parser.parse(input)['body'] : input.strip
-      puts FDK.single_event(function: func, context: c, input: body).to_json
+      puts FDK.single_event(function: func, context: c, input: STDIN.read).to_json
     else
       raise "Format '#{format}' not supported in Ruby FDK."
     end
