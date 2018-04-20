@@ -6,4 +6,4 @@ def myfunction(context:, input:)
   { message: "Hello #{name}!" }
 end
 
-FDK.handle(:myfunction)
+FDK.handle(function: :myfunction)
