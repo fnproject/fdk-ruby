@@ -12,22 +12,22 @@ module FDK
       parser = Yajl::Parser.new
 
       parser.on_parse_complete = lambda do |event|
-          context = Context.new(event)
-          body = event['data']
-          # Skipping json parsing of body because it would already be a parsed map according to the format spec defined here: https://github.com/cloudevents/spec/blob/master/serialization.md#json
-          se = FDK.single_event(function: func, context: context, input: body)
+        context = Context.new(event)
+        body = event['data']
+        # Skipping json parsing of body because it would already be a parsed map according to the format spec defined here: https://github.com/cloudevents/spec/blob/master/serialization.md#json
+        se = FDK.single_event(function: func, context: context, input: body)
 
-          # Respond with modified event
-          event['data'] = se
-          event['extensions']['protocol'] = {
-            headers: {
-                'Content-Type' => ['application/json']
-            },
-            'status_code' => 200,
-          }
-          STDOUT.puts event.to_json
-          STDOUT.puts
-          STDOUT.flush
+        # Respond with modified event
+        event['data'] = se
+        event['extensions']['protocol'] = {
+          headers: {
+              'Content-Type' => ['application/json']
+          },
+          'status_code' => 200,
+        }
+        STDOUT.puts event.to_json
+        STDOUT.puts
+        STDOUT.flush
       end
 
       STDIN.each_line { |line| parser.parse_chunk(line) }

@@ -34,7 +34,7 @@ module FDK
 
     # If it's a CNCF CloudEvent
     def cloud_event?
-      return ENV['FN_FORMAT'] == "cloudevent"
+      ENV['FN_FORMAT'] == "cloudevent"
     end
 
     def config
@@ -42,24 +42,15 @@ module FDK
     end
 
     def call_id
-      if cloud_event?
-        return event['eventID']
-      end
-      event['call_id']
+      cloud_event? ? event['eventID'] : event['call_id']
     end
 
     def content_type
-      if cloud_event?
-        return event['contentType']
-      end
-      event['content_type']
+      cloud_event? ? event['contentType'] : event['content_type']
     end
 
     def protocol
-      if cloud_event?
-        return event['extensions']['protocol']
-      end
-      event['protocol']
+      cloud_event? ? event['extensions']['protocol'] : event['protocol']
     end
   end
 end
