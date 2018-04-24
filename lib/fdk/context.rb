@@ -24,10 +24,17 @@ module FDK
     # $X - any configuration values you've set for the Application or the Route. Replace X with the upper cased name of the config variable you set. Ex: minio_secret=secret will be exposed via MINIO_SECRET env var.
     # FN_PARAM_$Y
 
-    attr_reader :payload
+    # CloudEvent format: https://github.com/cloudevents/spec/blob/master/serialization.md#json
 
-    def initialize(payload)
-      @payload = payload
+    attr_reader :event
+
+    def initialize(event)
+      @event = event
+    end
+
+    # If it's a CNCF CloudEvent
+    def cloud_event?
+      ENV['FN_FORMAT'] == "cloudevent"
     end
 
     def config
@@ -35,15 +42,15 @@ module FDK
     end
 
     def call_id
-      payload['call_id']
+      cloud_event? ? event['eventID'] : event['call_id']
     end
 
     def content_type
-      payload['content_type']
+      cloud_event? ? event['contentType'] : event['content_type']
     end
 
     def protocol
-      payload['protocol']
+      cloud_event? ? event['extensions']['protocol'] : event['protocol']
     end
   end
 end

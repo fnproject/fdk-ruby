@@ -13,7 +13,7 @@ require 'fdk`
 Then create a function with with the following syntax:
 
 ```ruby
-def myfunc(context, input) 
+def myfunc(context, input)
     # Do some work here
     return output
 end
@@ -52,17 +52,22 @@ FDK.handle(:myfunction)
 $ echo '{"name":"coolio"}' | fn run
 {"message":"Hello coolio!"}
 ```
+
 You can also specify the format (the default is JSON)
+
 ```sh
 $ echo '{"name":"coolio"}' | fn run --format json
 {"message":"Hello coolio!"}
 ```
+
 If you want to just pass plain text to the function, specify a format of __default__:
+
 ```sh
 $ echo 'coolio' | fn run --format default
 {"message":"Hello coolio!"}
 ```
 
+Deploy:
 
 ```sh
 fn deploy --app myapp --local && echo '{"name":"coolio"}' | fn call myapp /fdk-ruby
