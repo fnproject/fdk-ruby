@@ -15,7 +15,7 @@ module FDK
         context = Context.new(event)
         body = event['data']
         # Skipping json parsing of body because it would already be a parsed map according to the format spec defined here: https://github.com/cloudevents/spec/blob/master/serialization.md#json
-        se = FDK.single_event(function: func, context: context, input: body)
+        se = FDK.single_event(function: function, context: context, input: body)
 
         # Respond with modified event
         event['data'] = se
@@ -25,12 +25,12 @@ module FDK
           },
           'status_code' => 200
         }
-        STDOUT.puts event.to_json
-        STDOUT.puts
-        STDOUT.flush
+        output_stream.puts event.to_json
+        output_stream.puts
+        output_stream.flush
       end
 
-      STDIN.each_line { |line| parser.parse_chunk(line) }
+      input_stream.each_line { |line| parser.parse_chunk(line) }
 
     elsif format == 'json'
       parser = Yajl::Parser.new
@@ -70,6 +70,6 @@ module FDK
   end
 
   def self.single_event(function:, context:, input:)
-    send function, context, input
+    send function, context: context, input: input
   end
 end
