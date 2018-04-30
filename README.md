@@ -37,13 +37,12 @@ FDK.handle(myfunction)
 require 'fdk'
 
 def myfunction(context:, input:)
-    STDERR.puts "request_url: " + context.protocol['request_url']
-    STDERR.puts "call_id: " + context.call_id
-    STDERR.puts "input: " + input.to_s
-    { message: "Hello #{input['name']}!" }
+  input_value = input.respond_to?(:fetch) ? input.fetch('name') : input
+  name = input_value.to_s.strip.empty? ? 'World' : input_value
+  { message: "Hello #{name}!" }
 end
 
-FDK.handle(:myfunction)
+FDK.handle(function: :myfunction)
 ```
 
 ## Running the example that is in the root directory of this repo
