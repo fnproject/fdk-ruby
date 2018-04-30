@@ -6,7 +6,7 @@ require 'json'
 require 'yajl'
 
 module FDK
-  def self.handle(function)
+  def self.handle(function, input_stream: STDIN, output_stream: STDOUT)
     format = ENV['FN_FORMAT']
     if format == 'cloudevent'
       parser = Yajl::Parser.new
@@ -21,16 +21,16 @@ module FDK
         event['data'] = se
         event['extensions']['protocol'] = {
           headers: {
-              'Content-Type' => ['application/json']
+            'Content-Type' => ['application/json']
           },
           'status_code' => 200
         }
-        $stdout.puts event.to_json
-        $stdout.puts
-        $stdout.flush
+        output_stream.puts event.to_json
+        output_stream.puts
+        output_stream.flush
       end
 
-      $stdin.each_line { |line| parser.parse_chunk(line) }
+      input_stream.each_line { |line| parser.parse_chunk(line) }
 
     elsif format == 'json'
       parser = Yajl::Parser.new
@@ -49,12 +49,12 @@ module FDK
           'status_code' => 200,
           body: se.to_json
         }
-        $stdout.puts response.to_json
-        $stdout.puts
-        $stdout.flush
+        output_stream.puts response.to_json
+        output_stream.puts
+        output_stream.flush
       end
 
-      $stdin.each_line { |line| parser.parse_chunk(line) }
+      input_stream.each_line { |line| parser.parse_chunk(line) }
 
     elsif format == 'default'
       event = {}
@@ -63,7 +63,7 @@ module FDK
         'type' => 'http',
         'request_url' => ENV['FN_REQUEST_URL']
       }
-      $stdout.puts FDK.single_event(function: function, context: Context.new(event), input: $stdin.read).to_json
+      output_stream.puts FDK.single_event(function: function, context: Context.new(event), input: input_stream.read).to_json
     else
       raise "Format '#{format}' not supported in Ruby FDK."
     end
