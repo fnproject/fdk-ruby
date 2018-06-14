@@ -70,6 +70,6 @@ module FDK
   end
 
   def self.single_event(function:, context:, input:)
-    send function, context, input
+    send(function, context: context, input: input)
   end
 end
