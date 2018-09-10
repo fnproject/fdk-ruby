@@ -1,3 +1,3 @@
 module FDK
-  VERSION = "0.0.12.rc1"
+  VERSION = "0.0.12"
 end
