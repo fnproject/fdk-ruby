@@ -13,7 +13,7 @@ require 'fdk'
 Then create a function with with the following syntax:
 
 ```ruby
-def myfunc(context, input)
+def myfunc(context:, input:)
     # Do some work here
     return output
 end
