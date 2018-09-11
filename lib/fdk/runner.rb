@@ -63,7 +63,7 @@ module FDK
         'type' => 'http',
         'request_url' => ENV['FN_REQUEST_URL']
       }
-      output_stream.puts FDK.single_event(function: function, context: Context.new(event), input: input_stream.read).to_json
+      output_stream.puts FDK.single_event(function: function, context: Context.new(event), input: input_stream.read.chomp).to_json
     else
       raise "Format '#{format}' not supported in Ruby FDK."
     end
