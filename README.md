@@ -78,7 +78,7 @@ With an fn server running (see
 [Quickstart](https://github.com/fnproject/fn/blob/master/README.md) if you need instructions):
 
 ```sh
-fn deploy --app examples --local && echo '{"name":"coolio"}' | fn call examples /hello-ruby
+fn deploy --app examples --local && echo '{"name":"coolio"}' | fn invoke examples hello
 ```
 
 Change to hot:
@@ -86,7 +86,7 @@ Change to hot:
 Update func.yaml: `format: json`
 
 ```sh
-fn deploy --app examples --local && echo '{"name":"coolio"}' | fn call examples /hello-ruby
+fn deploy --app examples --local && echo '{"name":"coolio"}' | fn invoke examples hello
 ```
 
 ### Compare cold and hot functions
