@@ -1,0 +1,10 @@
+schema_version: 20180708
+name: hello
+version: 0.0.1
+runtime: ruby
+entrypoint: ruby func.rb
+format: json
+triggers:
+- name: hello
+  type: http
+  source: /hello

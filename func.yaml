@@ -1,5 +1,0 @@
-name: examples
-version: 0.0.105
-runtime: ruby
-entrypoint: ruby func.rb
-format: cloudevent

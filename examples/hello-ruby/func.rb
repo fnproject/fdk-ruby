@@ -1,4 +1,4 @@
-require_relative 'lib/fdk'
+require 'fdk'
 
 def myfunction(context:, input:)
   input_value = input.respond_to?(:fetch) ? input.fetch('name') : input

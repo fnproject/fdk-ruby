@@ -1,19 +1,19 @@
 # Ruby Function Developer Kit (FDK)
 
-This provides a Ruby framework for deleloping functions for us with [Fn](https://fnproject.github.io).
+This provides a Ruby framework for developing functions for use with [Fn](https://fnproject.github.io).
 
 ## Function Handler
 
 To use this FDK, you simply need to require this gem.
 
 ```ruby
-require 'fdk`
+require 'fdk'
 ```
 
 Then create a function with with the following syntax:
 
 ```ruby
-def myfunc(context, input)
+def myfunction(context:, input:)
     # Do some work here
     return output
 end
@@ -28,10 +28,10 @@ end
 Then simply pass that function to the FDK:
 
 ```ruby
-FDK.handle(myfunction)
+FDK.handle(:myfunction)
 ```
 
-## Full Example
+## Hello World Example
 
 ```ruby
 require 'fdk'
@@ -45,7 +45,13 @@ end
 FDK.handle(function: :myfunction)
 ```
 
-## Running the example that is in the root directory of this repo
+## Examples
+
+See the [examples](examples) folder of this repo for code examples.
+
+### Hello World
+
+Running the [Hello World](examples/hello-ruby) example
 
 ```sh
 $ echo '{"name":"coolio"}' | fn run
@@ -66,10 +72,13 @@ $ echo 'coolio' | fn run --format default
 {"message":"Hello coolio!"}
 ```
 
-Deploy:
+### Deploying the functions to an fn server
+
+With an fn server running (see
+[Quickstart](https://github.com/fnproject/fn/blob/master/README.md) if you need instructions):
 
 ```sh
-fn deploy --app myapp --local && echo '{"name":"coolio"}' | fn call myapp /fdk-ruby
+fn deploy --app examples --local && echo '{"name":"coolio"}' | fn invoke examples hello
 ```
 
 Change to hot:
@@ -77,12 +86,12 @@ Change to hot:
 Update func.yaml: `format: json`
 
 ```sh
-fn deploy --app myapp --local && echo '{"name":"coolio"}' | fn call myapp /fdk-ruby
+fn deploy --app examples --local && echo '{"name":"coolio"}' | fn invoke examples hello
 ```
 
-## Compare cold and hot
+### Compare cold and hot functions
 
-Run
+Run [loop.rb](examples/loop.rb)
 
 ```sh
 ruby loop.rb
