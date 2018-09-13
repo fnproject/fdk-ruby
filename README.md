@@ -65,11 +65,14 @@ With an fn server running (see
 `cd` to the [hello-ruby](examples/hello-ruby) folder and run:
 
 ```sh
-fn deploy --app examples --local && echo '{"name":"coolio"}' | fn invoke examples hello
+fn deploy --app examples --local
 ```
 
 The `--app examples` option tells fn to deploy the function as part of
 the _app_ named _examples_.
+
+The `--local` option tells fn not to push the function image to Docker
+Hub.
 
 ## Invoking functions
 Once we have deployed a function we can invoke it using `fn invoke`.
