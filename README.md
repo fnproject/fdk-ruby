@@ -85,8 +85,7 @@ $ fn invoke examples hello
 To get a more personal message, send a name in a JSON format and set the
 `content-type 'application/json'`:
 ```
-echo '{"name":"Joe"}' | fn invoke examples hello --content-type
-'application/json'
+echo '{"name":"Joe"}' | fn invoke examples hello --content-type 'application/json'
 {"message":"Hello Joe!"}
 ```
 
