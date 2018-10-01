@@ -1,3 +1,5 @@
+require 'date'
+
 module FDK
 
   # Config looks up values in the env vars
@@ -26,31 +28,34 @@ module FDK
 
     # CloudEvent format: https://github.com/cloudevents/spec/blob/master/serialization.md#json
 
-    attr_reader :event
+    attr_reader :headers
 
     def initialize(event)
       @event = event
     end
 
-    # If it's a CNCF CloudEvent
-    def cloud_event?
-      ENV['FN_FORMAT'] == "cloudevent"
-    end
 
     def config
       @config ||= Config.new
     end
 
     def call_id
-      cloud_event? ? event['eventID'] : event['call_id']
+      headers["Fn-Call-Id"]
+    end
+
+
+    def app_id
+      config["FN_APP_ID"]
+    end
+
+    def deadline
+      DateTime.iso8601(headers["Fn-Deadline"])
     end
 
     def content_type
-      cloud_event? ? event['contentType'] : event['content_type']
+      headers["Fn-Content-Type"]
     end
 
-    def protocol
-      cloud_event? ? event['extensions']['protocol'] : event['protocol']
-    end
+
   end
 end
