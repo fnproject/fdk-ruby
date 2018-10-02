@@ -44,23 +44,52 @@ class TestFdk < Test::Unit::TestCase
     raise "No file found after 10 seconds"
   end
 
-  def test_handle_simple_request()
+  def simple_req(client, body, headers)
+    req = Net::HTTP::Post.new("/call")
+    headers.each {|k, v|
+      req[k] = v
+    }
+    req.body = body
+    client.request(req)
+  end
+
+  def simple_fdk_call (handler)
+
     ENV['FN_FORMAT'] = 'http-stream'
     Dir.mktmpdir {|dir|
       sockfile = "#{dir}/test.sock"
       ENV['FN_LISTENER'] = "unix:#{sockfile}"
-      thr = Thread.new {FDK.handle(:testfn)}
+      thr = Thread.new {FDK.handle(handler)}
       wait_for_socket sockfile
-
-      req = Net::HTTP::Post.new("/call")
-      req.body = "hello"
       client = NetX::HTTPUnix.new('unix://' + sockfile)
-
-      resp = client.request(req)
-      puts resp.body
+      yield client
 
       thr.kill
       thr.join
+    }
+  end
+
+  def test_handle_simple_request()
+
+    simple_fdk_call (lambda {|context:, input:| "#{input} world"}) {|client|
+      resp = simple_req client, "hello", {'content-type' => 'text/plain'}
+      puts resp.body
+      assert_equal 200, resp.code.to_i
+      assert_equal "\"hello world\"", resp.body
+      assert_equal "application/json", resp['content-type']
+    }
+
+
+  end
+
+
+  def parses_json_input()
+    got_input = nil
+
+    simple_fdk_call (Proc.new {|context:, input:| got_input = input; nil}) {|client|
+      resp = simple_req client, '{"message":"hello"}', {}
+      assert_equal 200, resp.code.to_i
+      assert_equal "hello", got_input['message']
     }
 
   end
