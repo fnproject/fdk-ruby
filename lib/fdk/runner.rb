@@ -2,13 +2,11 @@ require 'webrick'
 require 'fileutils'
 require 'json'
 require 'set'
+
 # Looks for call(context, input) function
 # Executes it with input
 # Responds with output
-
-
 module FDK
-
   @filter_headers = Set['content-length', 'te', 'transfer-encoding', 'upgrade', 'trailer']
 
   def self.handle(function)
@@ -20,18 +18,18 @@ module FDK
       if listener == nil || !listener.start_with?('unix:/')
         raise "Missing or invalid socket URL in FN_LISTENER."
       end
-      socketFile = listener[5..listener.length]
-      tmpFile = socketFile + ".tmp"
+      socket_file = listener[5..listener.length]
+      tmp_file = socket_file + ".tmp"
 
-      UNIXServer.open(tmpFile) {|serv|
-        File.chmod 0666, tmpFile
-        puts "listening on #{tmpFile}->#{socketFile}"
-        FileUtils.ln_s(File.basename(tmpFile), socketFile)
+      UNIXServer.open(tmp_file) {|serv|
+        File.chmod 0666, tmp_file
+        puts "listening on #{tmp_file}->#{socket_file}"
+        FileUtils.ln_s(File.basename(tmp_file), socket_file)
 
         while true
           s = serv.accept
           begin
-            while true
+            begin
               req = WEBrick::HTTPRequest.new(WEBrick::Config::HTTP)
               req.parse s
               STDERR.puts("got request #{req}")
@@ -41,8 +39,7 @@ module FDK
               resp.send_response s
               STDERR.puts("sending resp  #{resp.status}, #{resp.header}")
 
-              break unless req.keep_alive?
-            end
+            end while req.keep_alive?
 
           rescue StandardError => e
             STDERR.puts "Error in request handling #{e}"
@@ -85,27 +82,21 @@ module FDK
 
     begin
       input = JSON.parse input
-
-    rescue
-    end
-    begin
-      if function.respond_to? :call
-        rv = function.call(context: context, input: input)
-      else
-        rv = send(function, context: context, input: input)
-      end
-    rescue => e
-      self.set_error(resp, e)
-      return
+      rv = if function.respond_to? :call
+             function.call(context: context, input: input)
+           else
+             send(function, context: context, input: input)
+           end
+    rescue StandardError => e
+      set_error(resp, e)
+      return # why the return?
     end
     resp.status = 200
-    headers_out_hash.map {|k, v|
-      unless @filter_headers.include? k
-        resp[k] = v
-      end
-    }
+    headers_out_hash.map do |k, v|
+      resp[k] = v unless @filter_headers.include? k
+    end
 
-    #TODO gimme a bit me flexibility on response handling
+    # TODO: gimme a bit me flexibility on response handling
     # binary, streams etc
     if !rv.nil? && rv.respond_to?('to_json')
       resp.body = rv.to_json
@@ -113,7 +104,5 @@ module FDK
     else
       resp.body = rv.to_s
     end
-
-
   end
 end
