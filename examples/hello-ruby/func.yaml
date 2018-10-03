@@ -1,9 +1,9 @@
 schema_version: 20180708
 name: hello
-version: 0.0.1
+version: 0.0.6
 runtime: ruby
 entrypoint: ruby func.rb
-format: json
+format: http-stream
 triggers:
 - name: hello
   type: http
