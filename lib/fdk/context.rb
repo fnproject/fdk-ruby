@@ -10,51 +10,52 @@ module FDK
   end
 
 
-  class OutHeaders
-
-    def initialize(h, key_fn)
+  class InHeaders
+    def initialize (h, key_fn)
       @headers = h
       @key_fn = key_fn
+
     end
 
-    def [](key)
+    def headerKey(key)
       if @key_fn
         key = @key_fn.call(key)
       end
-      h = @headers[key.downcase]
-      if h != nil
+      key.downcase
+    end
+
+    def [](key)
+      h = @headers[headerKey(key)]
+      unless h.nil?
         return h[0]
       end
       nil
     end
 
-    def []=(key, value)
-      if @key_fn
-        key = @key_fn.call(key)
-      end
+    def each (&block)
+      @headers.each &block
+    end
+  end
 
-      if value.respond_to? 'each'
-        h = []
-        value.each {|x| h.push(x.to_s)}
-        @headers[key.downcase] = v
-      else
-        @headers[key.downcase] = [value.to_s]
-      end
+  class OutHeaders < InHeaders
+
+    def initialize(h, key_in_fn)
+      super(h, key_in_fn)
     end
 
-    def add(key, *value)
-      if value.length > 0
-        @headers[key.downcase] = value.to_s
+
+    def []=(key, value)
+      if value.is_a? Array
+        h = []
+        value.each {|x| h.push(x.to_s)}
+        @headers[headerKey(key)] = h
       else
-        delete(key)
+        @headers[headerKey(key)] = [value.to_s]
       end
     end
 
     def delete(key)
-      if @key_fn
-        key = @key_fn.call(key)
-      end
-      @headers.delete key.to_lower
+      @headers.delete headerKey(key)
     end
   end
 
@@ -74,14 +75,11 @@ module FDK
     attr_reader :response_headers
 
     def initialize(headers_in, headers_out)
-      @headers = headers
-      @response_headers = OutHeaders.new(headers_out, nil)
-    end
-
-
-    def config
+      @headers = headers_in
+      @response_headers = headers_out
       @config ||= Config.new
     end
+
 
     def call_id
       @headers['fn-call-id']
@@ -90,6 +88,11 @@ module FDK
 
     def app_id
       @config['FN_APP_ID']
+    end
+
+
+    def fn_id
+      @config['FN_FN_ID']
     end
 
     def deadline
@@ -105,42 +108,45 @@ module FDK
     end
 
     def http_context
-      HTTPContext.new(@headers, OutHeaders.new(@response_headers, lambda do |v|
-        'fn-http-h-' + v
-      end))
+      HTTPContext.new(self)
     end
   end
 
 
   class HTTPContext
-    def initialize(headers_in, headers_out)
-      @context = ctx
-      headers_in.map {|k, v|
+
+    attr_reader :headers
+    attr_reader :response_headers
+
+    def initialize(ctx)
+
+      @ctx = ctx
+
+
+      http_headers = {}
+      ctx.headers.each {|k, v|
         if k.downcase.start_with?('fn-http-h-')
-          newKey = k['fn-http-h-'.length..k.length]
-          headers[newKey] = v
+          new_key = k['fn-http-h-'.length..k.length]
+          http_headers[new_key] = v
         end
       }
-      @headers = headers
 
-      @headers_out = headers_out
+      @headers = InHeaders.new(http_headers, nil)
+      @response_headers = OutHeaders.new(ctx.response_headers, lambda {|s| 'fn-http-h-' + s})
     end
 
-    def headers
-      @headers
-    end
 
     def request_url
-      @context.headers['fn-http-request-url']
+      @ctx.headers['fn-http-request-url']
     end
 
     def method
-      @context.headers['fn-http-method']
+      @ctx.headers['fn-http-method']
     end
 
 
     def status_code=(val)
-      @context.response_headers['fn-http-status'] = val.to_i
+      @ctx.response_headers['fn-http-status'] = val.to_i
     end
 
   end
