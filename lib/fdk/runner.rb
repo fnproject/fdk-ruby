@@ -38,7 +38,7 @@ module FDK
         while true
           s = serv.accept
           begin
-            begin
+            loop do
               req = WEBrick::HTTPRequest.new(WEBrick::Config::HTTP)
               req.parse s
               STDERR.puts("got request #{req}")
@@ -47,8 +47,8 @@ module FDK
               handle_function(function, req, resp)
               resp.send_response s
               STDERR.puts("sending resp  #{resp.status}, #{resp.header}")
-            end while req.keep_alive?
-
+              break unless req.keep_alive?
+            end
           rescue StandardError => e
             STDERR.puts "Error in request handling #{e}"
           end
