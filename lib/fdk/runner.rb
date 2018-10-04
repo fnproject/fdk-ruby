@@ -11,7 +11,6 @@ module FDK
                         'upgrade', 'trailer']
 
   def self.handle(function)
-    debug = ENV['FDK_DEBUG']
     format = ENV['FN_FORMAT']
 
     if format == 'http-stream'
@@ -58,6 +57,10 @@ module FDK
     else
       raise "Format '#{format}' not supported in Ruby FDK."
     end
+  end
+
+  def self.debug
+    @debug ||= ENV['FDK_DEBUG']
   end
 
   def self.set_error(resp, error)
