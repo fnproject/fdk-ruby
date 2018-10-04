@@ -35,7 +35,7 @@ module FDK
         puts "listening on #{tmp_file}->#{socket_file}"
         FileUtils.ln_s(File.basename(tmp_file), socket_file)
 
-        while true
+        loop do
           s = serv.accept
           begin
             loop do
