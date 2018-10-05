@@ -26,7 +26,7 @@ an FDK::Response object instead of a string.
 Then simply pass that function to the FDK:
 
 ```ruby
-FDK.handle(:myfunction)
+FDK.handle(target: :myfunction)
 ```
 
 ## Examples
@@ -46,7 +46,7 @@ def myfunction(context:, input:)
   { message: "Hello #{name}!" }
 end
 
-FDK.handle(function: :myfunction)
+FDK.handle(target: :myfunction)
 ```
 
 ## Deploying functions
