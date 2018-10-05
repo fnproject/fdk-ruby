@@ -35,7 +35,7 @@ module FDK
   end
   private_class_method :debug
 
-  def self.handle(target)
+  def self.handle(target:)
     # To avoid Fn trying to connect to the socket before
     # it's ready, the FDK creates a socket on (tmp_file).
     #

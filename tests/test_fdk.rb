@@ -19,7 +19,7 @@ class TestFdk < Test::Unit::TestCase
                        "FN_LISTENER" => "unix:#{sockfile}",
                }) {
         begin
-          FDK.handle(:testfn)
+          FDK.handle(target: :testfn)
           assert(false, " should have failed ")
         rescue StandardError => e
           puts e
@@ -35,7 +35,7 @@ class TestFdk < Test::Unit::TestCase
                      "FN_FORMAT" => "http-stream",
              }) {
       begin
-        FDK.handle(:testfn)
+        FDK.handle(target: :testfn)
         assert(false, " should have failed ")
       rescue
       end
@@ -203,7 +203,7 @@ class TestFdk < Test::Unit::TestCase
         ENV["FN_LISTENER"] = "unix:#{sockfile}"
         thr = Thread.new {
           begin
-            FDK.handle(handler)
+            FDK.handle(target: handler)
           rescue Exception => e
             STDERR.puts("error in main ", e)
           end
