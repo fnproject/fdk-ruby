@@ -23,7 +23,7 @@ jobs:
                 git config --global user.name "CI"
                 git branch --set-upstream-to=origin/${CIRCLE_BRANCH} ${CIRCLE_BRANCH}
                 mkdir -p ~/.gem
-                echo "---\n:rubygems_api_key:${GEM_API_KEY}" >> ~/.gem/credentials
+                echo "---\n:rubygems_api_key: ${GEM_API_KEY}" > ~/.gem/credentials
                 chmod 600 ~/.gem/credentials
                 ./release.sh
               fi
