@@ -1,6 +1,8 @@
 # Ruby Function Developer Kit (FDK)
 This provides a Ruby framework for developing functions for use with [Fn](https://fnproject.github.io).
 
+[![CircleCI](https://circleci.com/gh/fnproject/fdk-ruby.svg?style=svg)](https://circleci.com/gh/fnproject/fdk-ruby)
+
 ## Function Handler
 To use this FDK, you simply need to require this gem.
 
