@@ -26,7 +26,7 @@ an FDK::Response object instead of a string.
 Then simply pass that function to the FDK:
 
 ```ruby
-FDK.handle(:myfunction)
+FDK.handle(target: :myfunction)
 ```
 
 ## Examples
@@ -46,7 +46,7 @@ def myfunction(context:, input:)
   { message: "Hello #{name}!" }
 end
 
-FDK.handle(function: :myfunction)
+FDK.handle(target: :myfunction)
 ```
 
 ## Deploying functions
@@ -89,10 +89,3 @@ echo '{"name":"Joe"}' | fn invoke examples hello --content-type 'application/jso
 {"message":"Hello Joe!"}
 ```
 
-## Compare cold and hot functions
-
-Run [loop.rb](examples/loop.rb)
-
-```sh
-ruby loop.rb
-```

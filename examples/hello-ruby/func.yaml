@@ -3,7 +3,7 @@ name: hello
 version: 0.0.1
 runtime: ruby
 entrypoint: ruby func.rb
-format: json
+format: http-stream
 triggers:
 - name: hello
   type: http

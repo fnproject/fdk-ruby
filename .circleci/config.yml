@@ -1,0 +1,18 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/ruby:2.4.2-jessie-node
+    steps:
+      - checkout
+      - run:
+           name: build
+           command: gem build fdk.gemspec
+      - run:
+           name: build
+           command: gem install --development *.gem
+      - run:
+          name: Run tests
+          command: |
+            rake test
+
