@@ -10,32 +10,30 @@ module FDK
   @filter_headers = Set["content-length", "te", "transfer-encoding",
                         "upgrade", "trailer"]
 
-  private_class_method
-
   def self.format
     f = ENV["FN_FORMAT"]
     raise "'#{f}' not supported in Ruby FDK." unless f == "http-stream"
+
     f
   end
-
-  private_class_method
+  private_class_method :format
 
   def self.listener
     l = ENV["FN_LISTENER"]
     if l.nil? || !l.start_with?("unix:/")
       raise "Missing or invalid socket URL in FN_LISTENER."
     end
+
     l
   end
+  private_class_method :listener
 
   @dbg = ENV["FDK_DEBUG"]
-  private_class_method
 
   def self.debug(msg)
-    if @dbg
-      STDERR.puts(msg)
-    end
+    STDERR.puts(msg) if @dbg
   end
+  private_class_method :debug
 
   def self.handle(target)
     # To avoid Fn trying to connect to the socket before
@@ -79,8 +77,6 @@ module FDK
     end
   end
 
-  private_class_method
-
   def self.set_error(resp, error)
     STDERR.puts "Error in function: \"#{error}\""
     STDERR.puts error.backtrace
@@ -90,6 +86,7 @@ module FDK
     resp.body = { message: "An error occurred in the function",
                   detail: error.to_s }.to_json
   end
+  private_class_method :set_error
 
   def self.handle_call(target, req, resp)
     headers = {}
