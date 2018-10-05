@@ -50,7 +50,7 @@ class TestFdk < Test::Unit::TestCase
 
   def test_function_raises_error()
 
-    run_fdk (lambda {|context:, input:| raise Exception, "something went wrong"}) {|client|
+    run_fdk (lambda {|context:, input:| raise "something went wrong"}) {|client|
       resp = simple_req client
       assert_equal 502, resp.code.to_i
       assert_equal "application/json", resp["content-type"]

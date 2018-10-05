@@ -28,7 +28,6 @@ module FDK
     l
   end
 
-
   @dbg = ENV["FDK_DEBUG"]
   private_class_method
 
@@ -80,7 +79,6 @@ module FDK
     end
   end
 
-
   private_class_method
 
   def self.set_error(resp, error)
@@ -89,8 +87,8 @@ module FDK
 
     resp["content-type"] = "application/json"
     resp.status = 502
-    resp.body = {message: "An error occurred in the function",
-                 detail: error.to_s}.to_json
+    resp.body = { message: "An error occurred in the function",
+                  detail: error.to_s }.to_json
   end
 
   def self.handle_call(target, req, resp)
@@ -107,18 +105,18 @@ module FDK
 
     begin
       rv = if target.respond_to? :call
-        target.call(context: context, input: input.parsed)
-      else
-        send(target, context: context, input: input.parsed)
-      end
-    rescue Exception => e
+             target.call(context: context, input: input.parsed)
+           else
+             send(target, context: context, input: input.parsed)
+           end
+    rescue StandardError => e
       set_error(resp, e)
       return
     end
 
     resp.status = 200
     headers_out_hash.map do |k, v|
-      resp[k] = v.join(',') unless @filter_headers.include? k
+      resp[k] = v.join(",") unless @filter_headers.include? k
     end
 
     # TODO: gimme a bit me flexibility on response handling
@@ -126,9 +124,7 @@ module FDK
     if !rv.nil? && rv.respond_to?("to_json")
       resp.body = rv.to_json
       # don't override content type if already set
-      if resp["content-type"].nil?
-        resp["content-type"] = "application/json"
-      end
+      resp["content-type"] = "application/json" unless resp["content-type"]
     else
       resp.body = rv.to_s
     end
