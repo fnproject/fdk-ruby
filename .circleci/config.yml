@@ -17,7 +17,7 @@ jobs:
             rake test
       - run:
            name: Release if master
-           comand: |
+           command: |
              if [[ "${CIRCLE_BRANCH}" == "master" && -z "${CIRCLE_PR_REPONAME}" ]]; then
                 git config --global user.email "ci@fnproject.com"
                 git config --global user.name "CI"
