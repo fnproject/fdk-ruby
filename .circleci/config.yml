@@ -6,8 +6,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Bundle Install
-          command: bundle check -f fdk.gemspec || bundle install -f fdk.gemspec
+           name: build
+           command: gem build fdk.gemspec
+      - run:
+           name: build
+           command: gem install --development *.gem
       - run:
           name: Run tests
           command: |
