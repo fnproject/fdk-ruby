@@ -89,10 +89,3 @@ echo '{"name":"Joe"}' | fn invoke examples hello --content-type 'application/jso
 {"message":"Hello Joe!"}
 ```
 
-## Compare cold and hot functions
-
-Run [loop.rb](examples/loop.rb)
-
-```sh
-ruby loop.rb
-```

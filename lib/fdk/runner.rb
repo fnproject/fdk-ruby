@@ -10,13 +10,13 @@ module FDK
   @filter_headers = Set["content-length", "te", "transfer-encoding",
                         "upgrade", "trailer"]
 
-  def self.format
+  def self.checkFormat
     f = ENV["FN_FORMAT"]
     raise "'#{f}' not supported in Ruby FDK." unless f == "http-stream"
 
     f
   end
-  private_class_method :format
+  private_class_method :checkFormat
 
   def self.listener
     l = ENV["FN_LISTENER"]
@@ -43,6 +43,7 @@ module FDK
     # the FDK links the tmp_file to the socket_file.
     #
     # Fn waits for the socket_file to be created and then connects
+    checkFormat
     l = listener
     socket_file = l[5..l.length]
     tmp_file = socket_file + ".tmp"

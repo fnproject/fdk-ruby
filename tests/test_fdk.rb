@@ -11,15 +11,21 @@ end
 class TestFdk < Test::Unit::TestCase
 
   def test_require_format
-    with_env({
-                     "FN_FORMAT" => "",
-                     "FN_LISTENER" => "unix:/tmp/foo.sock",
-             }) {
-      begin
-        FDK.handle(:testfn)
-        assert(false, " should have failed ")
-      rescue
-      end
+
+    Dir.mktmpdir {|dir|
+      sockfile = "#{dir}/test.sock"
+      with_env({
+                       "FN_FORMAT" => "",
+                       "FN_LISTENER" => "unix:#{sockfile}",
+               }) {
+        begin
+          FDK.handle(:testfn)
+          assert(false, " should have failed ")
+        rescue StandardError => e
+          puts e
+
+        end
+      }
     }
 
   end
