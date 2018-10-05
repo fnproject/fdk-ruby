@@ -25,6 +25,6 @@ jobs:
                 mkdir -p ~/.gem
                 echo "---\n:rubygems_api_key:${GEM_API_KEY}" >> ~/.gem/credentials
                 chmod 600 ~/.gem/credentials
-                ./.circleci/release.sh
+                ./release.sh
               fi
 
