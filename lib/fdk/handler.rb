@@ -5,6 +5,7 @@ module FDK
                       "upgrade", "trailer"].freeze
 
     attr_reader :request, :target, :response
+    attr_accessor :error
 
     def initialize(target:, request:, response:)
       @target = target
@@ -51,6 +52,13 @@ module FDK
 
     def target_send
       send(target, context: context, input: input.parsed)
+    end
+
+    def good_response
+      response.status = 200
+      headers_out_hash.map do |k,v|
+        response[k] = v.join(",") unless FILTER_HEADERS.include? k
+      end
     end
 
     def error_response(error:)

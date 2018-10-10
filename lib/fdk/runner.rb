@@ -2,7 +2,7 @@ require "webrick"
 require "fileutils"
 require "json"
 require "set"
-require_relative './handler'
+require_relative "./handler"
 
 # Looks for call(context, input) function
 # Executes it with input
@@ -79,47 +79,26 @@ module FDK
     end
   end
 
-  def self.set_error(resp, error)
-    STDERR.puts "Error in function: \"#{error}\""
-    STDERR.puts error.backtrace
-
-    resp["content-type"] = "application/json"
-    resp.status = 502
-    resp.body = { message: "An error occurred in the function",
-                  detail: error.to_s }.to_json
-  end
-  private_class_method :set_error
-
   def self.handle_call(target, req, resp)
-
     my_call = Call.new(target: target, request: req, response: resp)
 
     headers_out_hash = my_call.headers_out_hash
-    headers_out = my_call.headers_out
-    headers_in = my_call.headers_in
-    context = my_call.context
-    input = my_call.input # ParsedInput.new(raw_input: req.body.to_s)
 
     begin
       rv = my_call.invoke_target
-=begin
-      rv = if target.respond_to? :call
-             target.call(context: context, input: input.parsed)
-           else
-             send(target, context: context, input: input.parsed)
-           end
-=end
     rescue StandardError => e
-      # set_error(resp, e)
       my_call.error_response(error: e)
       return
     end
 
+=begin
     resp.status = 200
 
     headers_out_hash.map do |k, v|
       resp[k] = v.join(",") unless @filter_headers.include? k
     end
+=end
+    my_call.good_response
     # TODO: gimme a bit me flexibility on response handling
     # binary, streams etc
     if !rv.nil? && rv.respond_to?("to_json")
