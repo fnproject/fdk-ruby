@@ -2,6 +2,7 @@ require "webrick"
 require "fileutils"
 require "json"
 require "set"
+require_relative './handler'
 
 # Looks for call(context, input) function
 # Executes it with input
@@ -127,7 +128,7 @@ module FDK
       resp.body = rv.to_s
     end
   end
-
+=begin
   # Stores raw input and can parse it as
   # JSON (add extra formats as required)
   class ParsedInput
@@ -147,4 +148,6 @@ module FDK
       as_json || raw
     end
   end
+=end
+
 end
