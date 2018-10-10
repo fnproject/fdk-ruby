@@ -1,7 +1,10 @@
 module FDK
+  # Call represents a call to the target function or lambda
   class Call
     FILTER_HEADERS = ["content-length", "te", "transfer-encoding",
                       "upgrade", "trailer"].freeze
+
+    attr_reader :request, :target, :response
 
     def initialize(target:, request:, response:)
       @target = target
@@ -13,8 +16,17 @@ module FDK
       @context ||= FDK::Context.new(headers_in, headers_out)
     end
 
+    def input
+      @input ||= ParsedInput.new(raw_input: request.body.to_s)
+    end
+
+    # TODO: Lose this
+    def headers_out_hash
+      @headers_out_hash ||= {}
+    end
+
     def headers_out
-      @headers_out ||= FDK::OutHeaders.new({}, nil)
+      @headers_out ||= FDK::OutHeaders.new(headers_out_hash, nil)
     end
 
     def headers_in
@@ -22,11 +34,36 @@ module FDK
     end
 
     def filtered_request_header
-      @request.header.reject { |k| FILTER_HEADERS.include? k }
+      request.header.reject { |k| FILTER_HEADERS.include? k }
     end
+
+    def invoke_target
+      # begin
+        target.respond_to?(:call) ? target_call : target_send
+      # rescue StandardError => e
+      # error_response(error: e)
+      # end
+    end
+
+    def target_call
+      target.call(context: context, input: input.parsed)
+    end
+
+    def target_send
+      send(target, context: context, input: input.parsed)
+    end
+
+    def error_response(error:)
+      response["content-type"] = "application/json"
+      response.status = 502
+      response.body = { message: "An error occurred in the function",
+                        detail: error.to_s }.to_json
+    end
+
+    private :target_call, :target_send
   end
 
-  # Stores raw input and can parse it as
+  # ParsedInput stores raw input and can parse it as
   # JSON (add extra formats as required)
   class ParsedInput
     attr_reader :raw

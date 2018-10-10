@@ -91,33 +91,35 @@ module FDK
   private_class_method :set_error
 
   def self.handle_call(target, req, resp)
-    headers = {}
-    req.header.map do |k, v|
-      headers[k] = v unless @filter_headers.include? k
-    end
 
-    headers_out_hash = {}
-    headers_out = FDK::OutHeaders.new(headers_out_hash, nil)
-    headers_in = FDK::InHeaders.new(headers, nil)
-    context = FDK::Context.new(headers_in, headers_out)
-    input = ParsedInput.new(raw_input: req.body.to_s)
+    my_call = Call.new(target: target, request: req, response: resp)
+
+    headers_out_hash = my_call.headers_out_hash
+    headers_out = my_call.headers_out
+    headers_in = my_call.headers_in
+    context = my_call.context
+    input = my_call.input # ParsedInput.new(raw_input: req.body.to_s)
 
     begin
+      rv = my_call.invoke_target
+=begin
       rv = if target.respond_to? :call
              target.call(context: context, input: input.parsed)
            else
              send(target, context: context, input: input.parsed)
            end
+=end
     rescue StandardError => e
-      set_error(resp, e)
+      # set_error(resp, e)
+      my_call.error_response(error: e)
       return
     end
 
     resp.status = 200
+
     headers_out_hash.map do |k, v|
       resp[k] = v.join(",") unless @filter_headers.include? k
     end
-
     # TODO: gimme a bit me flexibility on response handling
     # binary, streams etc
     if !rv.nil? && rv.respond_to?("to_json")
@@ -128,26 +130,4 @@ module FDK
       resp.body = rv.to_s
     end
   end
-=begin
-  # Stores raw input and can parse it as
-  # JSON (add extra formats as required)
-  class ParsedInput
-    attr_reader :raw
-
-    def initialize(raw_input:)
-      @raw = raw_input
-    end
-
-    def as_json
-      @json ||= JSON.parse(raw)
-    rescue JSON::ParserError
-      @json = false
-    end
-
-    def parsed
-      as_json || raw
-    end
-  end
-=end
-
 end
