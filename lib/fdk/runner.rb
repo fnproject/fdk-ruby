@@ -82,8 +82,6 @@ module FDK
   def self.handle_call(target, req, resp)
     my_call = Call.new(target: target, request: req, response: resp)
 
-    headers_out_hash = my_call.headers_out_hash
-
     begin
       rv = my_call.invoke_target
     rescue StandardError => e
@@ -91,22 +89,7 @@ module FDK
       return
     end
 
-=begin
-    resp.status = 200
-
-    headers_out_hash.map do |k, v|
-      resp[k] = v.join(",") unless @filter_headers.include? k
-    end
-=end
     my_call.good_response
-    # TODO: gimme a bit me flexibility on response handling
-    # binary, streams etc
-    if !rv.nil? && rv.respond_to?("to_json")
-      resp.body = rv.to_json
-      # don't override content type if already set
-      resp["content-type"] = "application/json" unless resp["content-type"]
-    else
-      resp.body = rv.to_s
-    end
+    my_call.format_response_body(rv: rv)
   end
 end

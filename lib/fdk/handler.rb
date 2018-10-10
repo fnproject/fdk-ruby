@@ -35,7 +35,15 @@ module FDK
     end
 
     def filtered_request_header
-      request.header.reject { |k| FILTER_HEADERS.include? k }
+      filter_out_headers(unfiltered: request.header)
+    end
+
+    def filtered_response_header
+      filter_out_headers(unfiltered: headers_out_hash)
+    end
+
+    def filter_out_headers(unfiltered:)
+      unfiltered.reject { |k| FILTER_HEADERS.include? k }
     end
 
     def invoke_target
@@ -44,6 +52,15 @@ module FDK
       # rescue StandardError => e
       # error_response(error: e)
       # end
+    end
+
+    def format_response_body(rv:)
+      if !rv.nil? && rv.respond_to?(:to_json)
+        response.body = rv.to_json
+        response["content-type"] = "application/json" unless response["content-type"]
+      else
+        response.body = rv.to_s
+      end
     end
 
     def target_call
@@ -56,9 +73,7 @@ module FDK
 
     def good_response
       response.status = 200
-      headers_out_hash.map do |k,v|
-        response[k] = v.join(",") unless FILTER_HEADERS.include? k
-      end
+      filtered_response_header.each { |k, v|response[k] = v.join(",") }
     end
 
     def error_response(error:)
