@@ -2,7 +2,8 @@ require "webrick"
 require "fileutils"
 require "json"
 require "set"
-require_relative "./handler"
+require_relative "./call"
+require_relative "./support_classes"
 
 # Looks for call(context, input) function
 # Executes it with input
@@ -81,15 +82,6 @@ module FDK
 
   def self.handle_call(target, req, resp)
     my_call = Call.new(target: target, request: req, response: resp)
-
-    begin
-      rv = my_call.invoke_target
-    rescue StandardError => e
-      my_call.error_response(error: e)
-      return
-    end
-
-    my_call.good_response
-    my_call.format_response_body(rv: rv)
+    my_call.invoke_target
   end
 end
