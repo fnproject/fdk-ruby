@@ -8,6 +8,7 @@ module FDK
     attr_accessor :error
 
     def initialize(target:, request:, response:)
+      STDERR.puts response.class
       @target = target
       @request = request
       @response = response
@@ -47,13 +48,11 @@ module FDK
     end
 
     def invoke_target
-      begin
-        rv = target.respond_to?(:call) ? target_call : target_send
-        good_response
-        format_response_body(rv: rv)
-      rescue StandardError => e
-        error_response(error: e)
-      end
+      rv = target.respond_to?(:call) ? target_call : target_send
+      good_response
+      format_response_body(rv: rv)
+    rescue StandardError => e
+      error_response(error: e)
     end
 
     def format_response_body(rv:)
@@ -75,7 +74,7 @@ module FDK
 
     def good_response
       response.status = 200
-      filtered_response_header.each { |k, v|response[k] = v.join(",") }
+      filtered_response_header.each { |k, v| response[k] = v.join(",") }
     end
 
     def error_response(error:)
@@ -87,5 +86,4 @@ module FDK
 
     private :target_call, :target_send
   end
-
 end
