@@ -65,8 +65,7 @@ module FDK
             req.parse s
             debug "got request #{req}"
             resp = WEBrick::HTTPResponse.new(WEBrick::Config::HTTP)
-            resp.status = 200
-            handle_call(target, req, resp)
+            Call.invoke(target: target, request: req, response: resp)
             resp.send_response s
             debug "sending resp  #{resp.status}, #{resp.header}"
             break unless req.keep_alive?
@@ -78,10 +77,5 @@ module FDK
         s.close
       end
     end
-  end
-
-  def self.handle_call(target, req, resp)
-    my_call = Call.new(target: target, request: req, response: resp)
-    my_call.invoke_target
   end
 end

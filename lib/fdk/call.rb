@@ -7,6 +7,11 @@ module FDK
     attr_reader :request, :target, :response
     attr_accessor :error
 
+    def self.invoke(target:, request:, response:)
+      call = Call.new(target: target, request: request, response: response)
+      call.invoke_target
+    end
+
     def initialize(target:, request:, response:)
       @target = target
       @request = request
@@ -47,19 +52,19 @@ module FDK
     end
 
     def invoke_target
-      rv = target.respond_to?(:call) ? target_call : target_send
+      retval = target.respond_to?(:call) ? target_call : target_send
       good_response
-      format_response_body(rv: rv)
+      format_response_body(fn_return: retval)
     rescue StandardError => e
       error_response(error: e)
     end
 
-    def format_response_body(rv:)
-      if !rv.nil? && rv.respond_to?(:to_json)
-        response.body = rv.to_json
+    def format_response_body(fn_return:)
+      if fn_return.respond_to?(:to_json)
+        response.body = fn_return.to_json
         response["content-type"] = "application/json" unless response["content-type"]
       else
-        response.body = rv.to_s
+        response.body = fn_return.to_s
       end
     end
 
