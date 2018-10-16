@@ -8,7 +8,6 @@ module FDK
     attr_accessor :error
 
     def initialize(target:, request:, response:)
-      STDERR.puts response.class
       @target = target
       @request = request
       @response = response
