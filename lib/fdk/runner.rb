@@ -9,26 +9,34 @@ require_relative "./support_classes"
 # Executes it with input
 # Responds with output
 module FDK
-  @filter_headers = Set["content-length", "te", "transfer-encoding",
-                        "upgrade", "trailer"]
+  class Function
+    attr_reader :format
+    def initialize(format:)
+      raise "'#{format}' not supported in Ruby FDK." unless format == "http-stream"
 
-  def self.check_format
-    f = ENV["FN_FORMAT"]
-    raise "'#{f}' not supported in Ruby FDK." unless f == "http-stream"
-
-    f
+      @format = format
+    end
   end
-  private_class_method :check_format
 
-  def self.listener
-    l = ENV["FN_LISTENER"]
-    if l.nil? || !l.start_with?("unix:/")
-      raise "Missing or invalid socket URL in FN_LISTENER."
+  class Listener
+    attr_reader :url
+
+    def initialize(url:)
+      if url.nil? || !url.start_with?("unix:/")
+        raise "Missing or invalid socket URL in FN_LISTENER."
+      end
+
+      @url = url
     end
 
-    l
+    def socket_file
+      @socket_file ||= url[5..url.length]
+    end
+
+    def tmp_file
+      socket_file + ".tmp"
+    end
   end
-  private_class_method :listener
 
   @dbg = ENV["FDK_DEBUG"]
 
@@ -45,10 +53,10 @@ module FDK
     # the FDK links the tmp_file to the socket_file.
     #
     # Fn waits for the socket_file to be created and then connects
-    check_format
-    l = listener
-    socket_file = l[5..l.length]
-    tmp_file = socket_file + ".tmp"
+    Function.new(format: ENV["FN_FORMAT"])
+    l2 = Listener.new(url: ENV["FN_LISTENER"])
+    socket_file = l2.socket_file
+    tmp_file = l2.tmp_file
 
     debug tmp_file
     debug socket_file
