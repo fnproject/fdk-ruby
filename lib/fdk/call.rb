@@ -26,7 +26,7 @@ module FDK
       @input ||= ParsedInput.new(raw_input: request.body.to_s)
     end
 
-    # TODO: Lose this
+    # TODO: Lose this?
     def headers_out_hash
       @headers_out_hash ||= {}
     end
