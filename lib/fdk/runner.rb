@@ -7,15 +7,6 @@ require "set"
 # Executes it with input
 # Responds with output
 module FDK
-  class Function
-    attr_reader :format
-    def initialize(format:)
-      raise "'#{format}' not supported in Ruby FDK." unless format == "http-stream"
-
-      @format = format
-    end
-  end
-
   @dbg = ENV["FDK_DEBUG"]
 
   def self.debug(msg)
@@ -23,7 +14,9 @@ module FDK
   end
 
   def self.handle(target:)
-    Function.new(format: ENV["FN_FORMAT"])
-    Listener.new(url: ENV["FN_LISTENER"]).listen { |req, resp| Call.invoke(target: target, request: req, response: resp) }
+    func = Function.new(function: target, format: ENV["FN_FORMAT"])
+    Listener.new(url: ENV["FN_LISTENER"]).listen do |req, resp|
+      func.call(request: req, response: resp)
+    end
   end
 end
