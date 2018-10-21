@@ -1,5 +1,5 @@
 module FDK
-  # Function represents a target function or lambda
+  # Function represents a function function or lambda
   class Function
     attr_reader :format, :function
     def initialize(function:, format:)
@@ -9,8 +9,14 @@ module FDK
       @function = function
     end
 
+    def as_lambda
+      return function if function.respond_to?(:call)
+
+      lambda { |context:, input:| send(function, context: context, input: input) }
+    end
+
     def call(request:, response:)
-      Call.invoke(target: function, request: request, response: response)
+      Call.new(request: request, response: response).process &as_lambda
     end
   end
 end

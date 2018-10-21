@@ -4,16 +4,10 @@ module FDK
     FILTER_HEADERS = ["content-length", "te", "transfer-encoding",
                       "upgrade", "trailer"].freeze
 
-    attr_reader :request, :target, :response
+    attr_reader :request, :response
     attr_accessor :error
 
-    def self.invoke(target:, request:, response:)
-      call = Call.new(target: target, request: request, response: response)
-      call.invoke_target
-    end
-
-    def initialize(target:, request:, response:)
-      @target = target
+    def initialize(request:, response:)
       @request = request
       @response = response
     end
@@ -51,8 +45,8 @@ module FDK
       unfiltered.reject { |k| FILTER_HEADERS.include? k }
     end
 
-    def invoke_target
-      retval = target.respond_to?(:call) ? target_call : target_send
+    def process(&block)
+      retval = block.call(context: context, input: input.parsed)
       good_response
       format_response_body(fn_return: retval)
     rescue StandardError => e
@@ -68,14 +62,6 @@ module FDK
       end
     end
 
-    def target_call
-      target.call(context: context, input: input.parsed)
-    end
-
-    def target_send
-      send(target, context: context, input: input.parsed)
-    end
-
     def good_response
       response.status = 200
       filtered_response_header.each { |k, v| response[k] = v.join(",") }
@@ -87,7 +73,5 @@ module FDK
       response.body = { message: "An error occurred in the function",
                         detail: error.to_s }.to_json
     end
-
-    private :target_call, :target_send
   end
 end
