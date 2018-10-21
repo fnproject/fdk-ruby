@@ -45,8 +45,8 @@ module FDK
       unfiltered.reject { |k| FILTER_HEADERS.include? k }
     end
 
-    def process(&block)
-      retval = block.call(context: context, input: input.parsed)
+    def process
+      retval = yield(context: context, input: input.parsed)
       good_response
       format_response_body(fn_return: retval)
     rescue StandardError => e

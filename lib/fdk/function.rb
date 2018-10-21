@@ -12,11 +12,11 @@ module FDK
     def as_lambda
       return function if function.respond_to?(:call)
 
-      lambda { |context:, input:| send(function, context: context, input: input) }
+      ->(context:, input:) { send(function, context: context, input: input) }
     end
 
     def call(request:, response:)
-      Call.new(request: request, response: response).process &as_lambda
+      Call.new(request: request, response: response).process(&as_lambda)
     end
   end
 end
