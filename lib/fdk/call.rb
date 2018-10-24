@@ -46,9 +46,8 @@ module FDK
     end
 
     def process
-      retval = yield(context: context, input: input.parsed)
+      format_response_body(fn_return: yield(context: context, input: input.parsed))
       good_response
-      format_response_body(fn_return: retval)
     rescue StandardError => e
       error_response(error: e)
     end
