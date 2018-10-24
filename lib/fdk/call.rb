@@ -54,12 +54,10 @@ module FDK
     end
 
     def format_response_body(fn_return:)
-      if fn_return.respond_to?(:to_json)
-        response.body = fn_return.to_json
-        response["content-type"] = "application/json" unless response["content-type"]
-      else
-        response.body = fn_return.to_s
-      end
+      return response.body = fn_return.to_s unless fn_return.respond_to?(:to_json)
+
+      response.body = fn_return.to_json
+      response["content-type"] = "application/json" unless response["content-type"]
     end
 
     def good_response

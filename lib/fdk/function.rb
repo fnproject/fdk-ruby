@@ -9,14 +9,14 @@ module FDK
       @function = function
     end
 
-    def as_lambda
+    def as_proc
       return function if function.respond_to?(:call)
 
       ->(context:, input:) { send(function, context: context, input: input) }
     end
 
     def call(request:, response:)
-      Call.new(request: request, response: response).process(&as_lambda)
+      Call.new(request: request, response: response).process(&as_proc)
     end
   end
 end
