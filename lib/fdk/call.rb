@@ -20,13 +20,8 @@ module FDK
       @input ||= ParsedInput.new(raw_input: request.body.to_s)
     end
 
-    # TODO: Lose this?
-    def headers_out_hash
-      @headers_out_hash ||= {}
-    end
-
     def headers_out
-      @headers_out ||= FDK::OutHeaders.new(headers_out_hash, nil)
+      @headers_out ||= FDK::OutHeaders.new({}, nil)
     end
 
     def headers_in
@@ -34,15 +29,7 @@ module FDK
     end
 
     def filtered_request_header
-      filter_out_headers(unfiltered: request.header)
-    end
-
-    def filtered_response_header
-      filter_out_headers(unfiltered: headers_out_hash)
-    end
-
-    def filter_out_headers(unfiltered:)
-      unfiltered.reject { |k| FILTER_HEADERS.include? k }
+      request.header.reject { |k| FILTER_HEADERS.include? k }
     end
 
     def process
@@ -61,7 +48,7 @@ module FDK
 
     def good_response
       response.status = 200
-      filtered_response_header.each { |k, v| response[k] = v.join(",") }
+      headers_out.each { |k, v| response[k] = v.join(",") }
     end
 
     def error_response(error:)
