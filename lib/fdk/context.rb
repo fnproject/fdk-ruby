@@ -53,17 +53,14 @@ module FDK
 
   # Represents the Fn context for a function execution
   class Context
+    # FN_APP_ID -the ID of the application that this function is a member of.
+    # FN_APP_NAME - the name of the application.
     # FN_CALL_ID - a unique ID for each function execution.
-    # FN_REQUEST_URL - the full URL for the request (parsing example)
-    # FN_HEADER_$X - the HTTP headers that were set for this request.
-    #   Replace $X with the upper cased name of the header
-    #   and replace dashes in the header with underscores.
-    # $X - any configuration values you've set for the Application or the Route.
+    # FN_FN_ID - the ID of this function
+    # FN_MEMORY - a number representing the amount of memory available to the call, in MB
+    # $X - any configuration values you've set for the Application.
     #   Replace X with the upper cased name of the config variable you set.
     #   e.g. minio_secret=secret will be exposed via MINIO_SECRET env var.
-    # FN_APP_NAME - the name of the application that matched this route, eg: myapp
-    # FN_METHOD - the HTTP method for the request, eg: GET or POST
-    # FN_MEMORY - a number representing the amount of memory available to the call, in MB
 
     attr_reader :headers
     attr_reader :response_headers
