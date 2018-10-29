@@ -15,6 +15,7 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'json', '~> 2.1', '>= 2.1.0'
   s.add_development_dependency 'net_http_unix', '~> 0.2', '>= 0.2.1'
+  s.add_development_dependency 'rubocop', '~> 0.60'
 
   s.files = Dir['Rakefile', '{bin,lib,man,test,spec}/**/*', 'README*', 'LICENSE*'] & `git ls-files -z`.split("\0")
 end
