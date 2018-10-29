@@ -12,6 +12,9 @@ jobs:
            name: build
            command: gem install --development *.gem
       - run:
+          name: Run RuboCop
+          command: rake rubocop
+      - run:
           name: Run tests
           command: |
             rake test
