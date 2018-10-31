@@ -7,10 +7,27 @@ require "set"
 # Executes it with input
 # Responds with output
 module FDK
-  @dbg = ENV["FDK_DEBUG"]
+  FDK_LOG_THRESHOLD = "FDK_LOG_THRESHOLD".freeze
+  FDK_LOG_DEBUG = 0
+  FDK_LOG_DEFAULT = 1
+
+  def self.log_threshold
+    @log_threshold ||= ENV[FDK_LOG_THRESHOLD] ? ENV[FDK_LOG_THRESHOLD].to_i : FDK_LOG_DEFAULT
+  end
+
+  # Writes the entry to STDERR if the log_level >= log_threshold
+  # If no log level is specified, 1 is assumed.
+  def self.log(entry:, log_level: FDK_LOG_DEFAULT)
+    STDERR.puts(entry) if log_level >= log_threshold
+  end
+
+  def self.log_error(error:)
+    log(entry: error.message)
+    log(entry: error.backtrace.join("\n"), log_level: FDK_LOG_DEBUG)
+  end
 
   def self.debug(msg)
-    STDERR.puts(msg) if @dbg
+    log(entry: msg, log_level: FDK_LOG_DEBUG)
   end
 
   def self.handle(target:)

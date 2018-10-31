@@ -38,8 +38,8 @@ module FDK
 
         handle_requests(socket: local_socket, fn_block: block)
       rescue StandardError => e
-        STDERR.puts "Error in request handling #{e}"
-        STDERR.puts e.backtrace
+        FDK.log(entry: "Error in request handling #{e}")
+        FDK.log(entry: e.backtrace)
       end
       local_socket.close
     end
