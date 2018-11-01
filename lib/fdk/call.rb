@@ -36,6 +36,7 @@ module FDK
       format_response_body(fn_return: yield(context: context, input: input.parsed))
       good_response
     rescue StandardError => e
+      FDK.log_error(error: e)
       error_response(error: e)
     end
 
