@@ -32,29 +32,28 @@ module FDK
     end
 
     def listen(&block)
-      local_socket = socket.accept
-      begin
-        raise StandardError("No block given") unless block_given?
+      raise StandardError("No block given") unless block_given?
 
-        handle_requests(socket: local_socket, fn_block: block)
+      begin
+        loop do
+          handle_request(fn_block: block)
+        end
       rescue StandardError => e
         FDK.log(entry: "Error in request handling #{e}")
         FDK.log(entry: e.backtrace)
       end
-      local_socket.close
     end
 
-    def handle_requests(socket:, fn_block:)
-      loop do
-        req = WEBrick::HTTPRequest.new(WEBrick::Config::HTTP)
-        resp = WEBrick::HTTPResponse.new(WEBrick::Config::HTTP)
-        req.parse(socket)
-        FDK.debug "got request #{req}"
-        fn_block.call(req, resp)
-        resp.send_response(socket)
-        FDK.debug "sending resp  #{resp.status}, #{resp.header}"
-        break unless req.keep_alive?
-      end
+    def handle_request(fn_block:)
+      local_socket = socket.accept
+      req = WEBrick::HTTPRequest.new(WEBrick::Config::HTTP)
+      resp = WEBrick::HTTPResponse.new(WEBrick::Config::HTTP)
+      req.parse(local_socket)
+      FDK.debug "got request #{req}"
+      fn_block.call(req, resp)
+      resp.send_response(local_socket)
+      FDK.debug "sending resp  #{resp.status}, #{resp.header}"
+      local_socket.close
     end
 
     def socket_path
