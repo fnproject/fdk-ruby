@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 2.4"
 
   s.add_runtime_dependency "json", "~> 2.1", ">= 2.1.0"
+  s.add_runtime_dependency "webrick", "~> 1.4", ">= 1.4.2"
   s.add_development_dependency "net_http_unix", "~> 0.2", ">= 0.2.1"
   s.add_development_dependency "rubocop", "~> 0.60"
 
