@@ -51,6 +51,7 @@ module FDK
       req.parse(local_socket)
       FDK.debug "got request #{req}"
       fn_block.call(req, resp)
+      resp["Connection"] = "close" # we're not using keep alives sadly
       resp.send_response(local_socket)
       FDK.debug "sending resp  #{resp.status}, #{resp.header}"
       local_socket.close

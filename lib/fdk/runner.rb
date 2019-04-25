@@ -18,7 +18,7 @@ module FDK
   # Writes the entry to STDERR if the log_level >= log_threshold
   # If no log level is specified, 1 is assumed.
   def self.log(entry:, log_level: FDK_LOG_DEFAULT)
-    STDERR.puts(entry) if log_level >= log_threshold
+    warn(entry) if log_level >= log_threshold
   end
 
   def self.log_error(error:)
