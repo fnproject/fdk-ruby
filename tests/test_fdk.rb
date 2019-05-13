@@ -172,6 +172,19 @@ class TestFdk < Test::Unit::TestCase
     }
   end
 
+  def test_log_frame_header
+    capout, caperr = with_captured_stdout_stderr {
+      with_env({"FN_LOGFRAME_NAME" => "foo", "FN_LOGFRAME_HDR" => "Fn-Call-Id"}) {
+        run_fdk (lambda {|context:, input:| "#{input} world"}) {|client|
+          resp = simple_req client, "hello", {"fn-call-id" => "12345"}
+          assert_equal 200, resp.code.to_i
+        }
+      }
+    }
+    assert_includes capout, "\nfoo=12345\n"
+    assert_includes caperr, "\nfoo=12345\n"
+  end
+
 
   def simple_req(client, body = "", headers = {})
     req = Net::HTTP::Post.new("/call")
@@ -193,6 +206,18 @@ class TestFdk < Test::Unit::TestCase
       ENV.replace old_env
     end
 
+  end
+
+  def with_captured_stdout_stderr
+    original_stdout = $stdout
+    original_stderr = $stderr
+    $stdout = StringIO.new
+    $stderr = StringIO.new
+    yield
+    return $stdout.string, $stderr.string
+  ensure
+    $stdout = original_stdout
+    $stderr = original_stderr
   end
 
   def run_fdk (handler)

@@ -9,12 +9,15 @@ module FDK
   #
   # Fn waits for the socket_path to be created and then connects
   class Listener
-    attr_reader :url, :private_socket
+    attr_reader :url, :private_socket, :fn_logframe_name, :fn_logframe_hdr
 
     def initialize(url:)
       if url.nil? || !url.start_with?("unix:/")
         raise "Missing or invalid socket URL in FN_LISTENER."
       end
+
+      @fn_logframe_name = ENV["FN_LOGFRAME_NAME"]
+      @fn_logframe_hdr = ENV["FN_LOGFRAME_HDR"]
 
       @url = url
       @private_socket = UNIXServer.open(private_socket_path)
@@ -50,6 +53,7 @@ module FDK
       resp = WEBrick::HTTPResponse.new(WEBrick::Config::HTTP)
       req.parse(local_socket)
       FDK.debug "got request #{req}"
+      log_frame_header(req.header)
       fn_block.call(req, resp)
       resp["Connection"] = "close" # we're not using keep alives sadly
       resp.send_response(local_socket)
@@ -63,6 +67,18 @@ module FDK
 
     def private_socket_path
       socket_path + ".private"
+    end
+
+    def log_frame_header(headers)
+      unless @fn_logframe_name.nil? || @fn_logframe_hdr.nil?
+        k = @fn_logframe_hdr.downcase
+        v = headers[k]
+        unless v.nil?
+          frm = "\n#{@fn_logframe_name}=#{v[0]}\n"
+          $stderr.print frm
+          $stdout.print frm
+        end
+      end
     end
   end
 end
