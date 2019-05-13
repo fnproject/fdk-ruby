@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module FDK
   # Represents the socket that Fn uses to communicate
   # with the FDK (and thence the function)
@@ -49,8 +51,7 @@ module FDK
 
     def handle_request(fn_block:)
       local_socket = socket.accept
-      req = WEBrick::HTTPRequest.new(WEBrick::Config::HTTP)
-      resp = WEBrick::HTTPResponse.new(WEBrick::Config::HTTP)
+      req, resp = new_req_resp
       req.parse(local_socket)
       FDK.debug "got request #{req}"
       log_frame_header(req.header)
@@ -59,6 +60,12 @@ module FDK
       resp.send_response(local_socket)
       FDK.debug "sending resp  #{resp.status}, #{resp.header}"
       local_socket.close
+    end
+
+    def new_req_resp
+      req = WEBrick::HTTPRequest.new(WEBrick::Config::HTTP)
+      resp = WEBrick::HTTPResponse.new(WEBrick::Config::HTTP)
+      [req, resp]
     end
 
     def socket_path
@@ -70,15 +77,15 @@ module FDK
     end
 
     def log_frame_header(headers)
-      unless @fn_logframe_name.nil? || @fn_logframe_hdr.nil?
-        k = @fn_logframe_hdr.downcase
-        v = headers[k]
-        unless v.nil?
-          frm = "\n#{@fn_logframe_name}=#{v[0]}\n"
-          $stderr.print frm
-          $stdout.print frm
-        end
-      end
+      return if @fn_logframe_name.nil? || @fn_logframe_hdr.nil?
+
+      k = @fn_logframe_hdr.downcase
+      v = headers[k]
+      return if v.nil?
+
+      frm = "\n#{@fn_logframe_name}=#{v[0]}\n"
+      $stderr.print frm
+      $stdout.print frm
     end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module FDK
   # Call represents a call to the target function or lambda
   class Call

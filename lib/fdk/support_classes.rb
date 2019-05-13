@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module FDK
   # ParsedInput stores raw input and can parse it as
   # JSON (add extra formats as required)

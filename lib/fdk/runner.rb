@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "webrick"
 require "fileutils"
 require "json"
@@ -7,7 +9,7 @@ require "set"
 # Executes it with input
 # Responds with output
 module FDK
-  FDK_LOG_THRESHOLD = "FDK_LOG_THRESHOLD".freeze
+  FDK_LOG_THRESHOLD = "FDK_LOG_THRESHOLD"
   FDK_LOG_DEBUG = 0
   FDK_LOG_DEFAULT = 1
 
