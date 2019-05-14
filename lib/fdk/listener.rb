@@ -77,15 +77,22 @@ module FDK
     end
 
     def log_frame_header(headers)
-      return if @fn_logframe_name.nil? || @fn_logframe_hdr.nil?
+      return unless logframe_vars_exist
 
       k = @fn_logframe_hdr.downcase
       v = headers[k]
-      return if v.nil?
+      return if v.nil? || v.empty?
 
       frm = "\n#{@fn_logframe_name}=#{v[0]}\n"
       $stderr.print frm
       $stdout.print frm
+    end
+
+    def logframe_vars_exist
+      return false if @fn_logframe_name.nil? || @fn_logframe_name.empty? ||
+                      @fn_logframe_hdr.nil? || @fn_logframe_hdr.empty?
+
+      true
     end
   end
 end
