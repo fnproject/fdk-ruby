@@ -85,7 +85,9 @@ module FDK
 
       frm = "\n#{@fn_logframe_name}=#{v[0]}\n"
       $stderr.print frm
+      $stderr.flush
       $stdout.print frm
+      $stdout.flush
     end
 
     def logframe_vars_exist
