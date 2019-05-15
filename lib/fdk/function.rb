@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module FDK
   # Function represents a function function or lambda
   class Function
