@@ -19,8 +19,7 @@
 module FDK
   # Call represents a call to the target function or lambda
   class Call
-    FILTER_HEADERS = ["content-length", "te", "transfer-encoding",
-                      "upgrade", "trailer"].freeze
+    FILTER_HEADERS = %w[content-length te transfer-encoding upgrade trailer].freeze
 
     attr_reader :request, :response
     attr_accessor :error
