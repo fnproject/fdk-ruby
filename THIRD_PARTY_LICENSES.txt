@@ -108,6 +108,15 @@ Copyright (C) 1993-2013 Yukihiro Matsumoto. All rights reserved.
 
 License: 2-Clause BSD License, a copy of the license is included at the end of this file.
 
+................................................................................
+
+Fourth Party Dependencies
+
+rake
+Copyright (c) Jim Weirich
+The MIT License
+
+License: The MIT License, a copy of the license is included at the end of this file.
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 Third Party Attributions for Examples, Tests, Builds, etc
@@ -124,6 +133,31 @@ Apache License Version 2.0
 
 License: Apache License 2.0, a copy of the license is included at the end of this file.
 
+................................................................................
+
+Fourth Party Dependencies
+
+rake
+Copyright (c) Jim Weirich
+The MIT License
+
+bundler
+Copyright (c) 2010 Andre Arko
+Copyright (c) 2009 Engine Yard
+The MIT License
+
+rspec
+Copyright (c) 2009 Chad Humphries, David Chelimsky
+Copyright (c) 2006 David Chelimsky, The RSpec Development Team
+Copyright (c) 2005 Steven Baker
+The MIT License
+
+yard
+Copyright (c) 2007-2018 Loren Segal
+The MIT License
+
+License: The MIT License, a copy of the license is included at the end of this file.
+
 --------------------------------------------------------------------------------
 
 rubocop
@@ -138,6 +172,65 @@ Fourth Party Dependencies
 
 parallel
 No License
+
+bundler
+Copyright (c) 2010 Andre Arko
+Copyright (c) 2009 Engine Yard
+The MIT License
+
+rake
+Copyright (c) Jim Weirich
+The MIT License
+
+rspec
+Copyright (c) 2009 Chad Humphries, David Chelimsky
+Copyright (c) 2006 David Chelimsky, The RSpec Development Team
+Copyright (c) 2005 Steven Baker
+The MIT License
+
+bump
+Copyright (c) 2015 Pavol Zbell
+The MIT License
+
+memory_profiler
+Copyright (c) 2013 Sam Saffron
+The MIT License
+
+pry 
+Copyright (c) 2018 John Mair (banisterfiend)
+The MIT License
+
+yard
+Copyright (c) 2007-2018 Loren Segal
+The MIT License
+
+rubocop-performance 
+Copyright (c) 2012-20 Bozhidar Batsov
+The MIT License
+
+rubocop-rspec 
+Copyright (c) 2014 Ian MacLeod ian@nevir.net
+The MIT License
+
+safe_yaml
+Copyright (c) 2013 Dan Tao
+The MIT License
+
+simplecov
+Copyright (c) 2010-2017 Christoph Olszowka
+The MIT License
+
+stackprof
+Copyright (c) 2013-2015 Aman Gupta
+The MIT License
+
+test-queue
+Copyright (c) 2018 Aman Gupta
+The MIT License
+
+webmock
+Copyright (c) 2009-2010 Bartosz Blimke
+The MIT License
 
 parser
 Copyright (c) 2013-2016 whitequark  <whitequark@whitequark.org>
