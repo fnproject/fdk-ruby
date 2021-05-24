@@ -26,5 +26,5 @@ fi
 rubyversion=$1
 
 echo $rubyversion
-#pushd images/build/${rubyversion} && docker build -t fnproject/ruby:${rubyversion}-dev . && popd
-#pushd images/runtime/${rubyversion} && docker build -t fnproject/ruby:${rubyversion} . && popd
+pushd images/build/${rubyversion} && docker build -t greendragons/ruby:${rubyversion}-dev . && popd
+pushd images/runtime/${rubyversion} && docker build -t greendragons/ruby:${rubyversion} . && popd

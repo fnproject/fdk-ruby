@@ -16,11 +16,12 @@
 #
 
 
-user="fnproject"
+user="greendragons"
 image="ruby"
 
 runtime27="2.7.3"
 echo $runtime27
-#docker push ${user}/${image}:${runtime27}
-#docker push ${user}/${image}:${runtime27}-dev
+docker push ${user}/${image}
+docker push ${user}/${image}:${runtime27}
+docker push ${user}/${image}:${runtime27}-dev
 
