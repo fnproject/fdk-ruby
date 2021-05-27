@@ -30,5 +30,6 @@ jobs:
 
               ./build-images.sh 2.7
               ./release_images.sh
+              ./release.sh
             fi
 
