@@ -51,6 +51,7 @@ module FDK
   # Represents outbound HTTP headers
   class OutHeaders < InHeaders
     def initialize(headers, key_in_fn)
+      headers["Fn-Fdk-Version"] = ["fdk-ruby/#{FDK::VERSION}"]
       super(headers, key_in_fn)
     end
 
