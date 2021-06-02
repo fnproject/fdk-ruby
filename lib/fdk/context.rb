@@ -31,7 +31,7 @@ module FDK
     def initialize(headers, key_fn)
       @headers = headers
       @key_fn = key_fn
-      puts "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ #{key_fn}"
+      puts "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ #{key_fn}"
     end
 
     def header_key(key)
