@@ -38,7 +38,8 @@ module FDK
     end
 
     def headers_out
-      @headers_out ||= FDK::OutHeaders.new({}, nil)
+      @headers_out ||= FDK::OutHeaders.new({ "Fn-Fdk-Version" =>
+                                             ["fdk-ruby/#{FDK::VERSION}"] }, nil)
     end
 
     def headers_in
@@ -61,7 +62,7 @@ module FDK
       return response.body = fn_return.to_s unless fn_return.respond_to?(:to_json)
 
       response.body = fn_return.to_json
-      response["content-type"] = "application/json" unless response["content-type"]
+      response["Content-Type"] = "application/json" unless response["Content-Type"]
     end
 
     def good_response
@@ -70,7 +71,7 @@ module FDK
     end
 
     def error_response(error:)
-      response["content-type"] = "application/json"
+      response["Content-Type"] = "application/json"
       response.status = 502
       response.body = { message: "An error occurred in the function",
                         detail: error.to_s }.to_json

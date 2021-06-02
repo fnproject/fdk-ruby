@@ -90,7 +90,7 @@ module FDK
     end
 
     def call_id
-      @headers["fn-call-id"]
+      @headers["Fn-Call-Id"]
     end
 
     def app_id
@@ -102,7 +102,7 @@ module FDK
     end
 
     def deadline
-      DateTime.iso8601(@headers["fn-deadline"])
+      DateTime.iso8601(@headers["Fn-Deadline"])
     end
 
     def memory
@@ -110,7 +110,7 @@ module FDK
     end
 
     def content_type
-      @headers["content-type"]
+      @headers["Content-Type"]
     end
 
     def http_context
@@ -125,7 +125,7 @@ module FDK
     attr_reader :response_headers
 
     def initialize(ctx)
-      fn_http_h_ = "fn-http-h-"
+      fn_http_h_ = "Fn-Http-H-"
       @ctx = ctx
       http_headers = {}
       ctx.headers.each do |k, v|
@@ -136,15 +136,15 @@ module FDK
     end
 
     def request_url
-      @ctx.headers["fn-http-request-url"]
+      @ctx.headers["Fn-Http-Request-Url"]
     end
 
     def method
-      @ctx.headers["fn-http-method"]
+      @ctx.headers["Fn-Http-Method"]
     end
 
     def status_code=(val)
-      @ctx.response_headers["fn-http-status"] = val.to_i
+      @ctx.response_headers["Fn-Http-Status"] = val.to_i
     end
   end
 end

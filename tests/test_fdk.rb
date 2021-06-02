@@ -62,10 +62,10 @@ class TestFdk < Test::Unit::TestCase
 
   def test_handle_simple_request()
     run_fdk (lambda {|context:, input:| "#{input} world"}) {|client|
-      resp = simple_req client, "hello", {"content-type" => "text/plain"}
+      resp = simple_req client, "hello", {"Content-Type" => "text/plain"}
       assert_equal 200, resp.code.to_i
       assert_equal "\"hello world\"", resp.body
-      assert_equal "application/json", resp["content-type"]
+      assert_equal "application/json", resp["Content-Type"]
     }
   end
 
@@ -75,7 +75,7 @@ class TestFdk < Test::Unit::TestCase
     run_fdk (lambda {|context:, input:| raise "something went wrong"}) {|client|
       resp = simple_req client
       assert_equal 502, resp.code.to_i
-      assert_equal "application/json", resp["content-type"]
+      assert_equal "application/json", resp["Content-Type"]
 
       err = JSON.parse resp.body
       assert_equal "An error occurred in the function", err["message"]
@@ -90,10 +90,10 @@ class TestFdk < Test::Unit::TestCase
   def test_accepts_method()
 
     run_fdk (:testfn) {|client|
-      resp = simple_req client, "hello", {"content-type" => "text/plain"}
+      resp = simple_req client, "hello", {"Content-Type" => "text/plain"}
       assert_equal 200, resp.code.to_i
       assert_equal "\"Hello world from method\"", resp.body
-      assert_equal "application/json", resp["content-type"]
+      assert_equal "application/json", resp["Content-Type"]
     }
 
 
@@ -139,7 +139,7 @@ class TestFdk < Test::Unit::TestCase
 
   def test_sets_resp_context
     run_fdk (Proc.new {|context:, input:|
-      context.response_headers["content-type"] = "Foo/bar"
+      context.response_headers["Content-Type"] = "Foo/bar"
       context.response_headers["foo"] = ["bar", "baz"]
       context.response_headers["bing"] = "bob"
       context.response_headers["bob"] = {"a" => "b"}
@@ -150,7 +150,7 @@ class TestFdk < Test::Unit::TestCase
       resp = simple_req client
       assert_equal 200, resp.code.to_i
       assert_equal "bar,baz", resp["foo"]
-      assert_equal "Foo/bar", resp["content-type"]
+      assert_equal "Foo/bar", resp["Content-Type"]
       assert_equal '{"a"=>"b"}', resp["bob"]
     }
 
