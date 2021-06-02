@@ -164,7 +164,7 @@ class TestFdk < Test::Unit::TestCase
                         {
                                 "Fn-Http-Request-Url" => "http://www.foo.bar.com/?baz=bar",
                                 "Fn-Http-Method" => "PINCH",
-                                "Fn-Http-H-Myheader" => "foo"
+                                "Fn-Http-H-myHeader" => "foo"
                         }
 
       assert_equal 200, resp.code.to_i
