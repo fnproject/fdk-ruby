@@ -27,5 +27,5 @@ rubyversion=$1
 user="fnproject"
 
 echo $rubyversion
-#pushd images/build/${rubyversion} && docker build -t ${user}/ruby:${rubyversion}-dev . && popd
-#pushd images/runtime/${rubyversion} && docker build -t ${user}/ruby:${rubyversion} . && popd
+pushd images/build/${rubyversion} && docker build -t ${user}/ruby:${rubyversion}-dev . && popd
+pushd images/runtime/${rubyversion} && docker build -t ${user}/ruby:${rubyversion} . && popd
