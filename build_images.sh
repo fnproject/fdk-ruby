@@ -16,9 +16,9 @@
 #
 
 
-set -xe
+set -xeuo pipefail
 
-if [ -z "$1" ];then
+if [ -z ${1:-} ];then
   echo "Please supply ruby version as argument to build image." >> /dev/stderr
   exit 2
 fi
