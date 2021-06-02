@@ -35,7 +35,6 @@ module FDK
 
     def header_key(key)
       key = @key_fn.call(key) if @key_fn
-      key.downcase
     end
 
     def [](key)
@@ -129,7 +128,7 @@ module FDK
       @ctx = ctx
       http_headers = {}
       ctx.headers.each do |k, v|
-        http_headers[k.sub(fn_http_h_, "")] = v if k.downcase.start_with?(fn_http_h_)
+        http_headers[k.sub(fn_http_h_, "")] = v if k.start_with?(fn_http_h_)
       end
       @headers = InHeaders.new(http_headers, nil)
       @response_headers = OutHeaders.new(ctx.response_headers, ->(s) { fn_http_h_ + s })
