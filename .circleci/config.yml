@@ -22,7 +22,8 @@ jobs:
       - deploy:
           command: |
             if [[ "${CIRCLE_BRANCH}" == "runtime-2.7-test" ]]; then
-              printenv DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+              #printenv DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+              docker login -u $DOCKER_USER -pp $DOCKER_PASS
 
               #git config --global user.email "ci@fnproject.com"
               #git config --global user.name "CI"
