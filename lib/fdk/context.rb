@@ -34,7 +34,8 @@ module FDK
     end
 
     def header_key(key)
-      @key_fn.call(key) if @key_fn
+      key = @key_fn.call(key) if @key_fn
+      key.downcase
     end
 
     def [](key)
