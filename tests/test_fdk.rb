@@ -167,7 +167,6 @@ class TestFdk < Test::Unit::TestCase
                                 "X-Header" => "foo"
                         }
 
-      got_ctx.http_context.headers.each { |k, v| puts "Key=#{k}, Value=#{v}" }
       assert_equal 200, resp.code.to_i
       assert_equal "http://www.foo.bar.com/?baz=bar", got_ctx.http_context.request_url
       assert_equal "PINCH", got_ctx.http_context.method
