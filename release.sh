@@ -1,4 +1,4 @@
-
+#!/usr/bin/env bash
 #
 # Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
 #
@@ -14,11 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+set -exuo pipefail
 
 version_file=lib/fdk/version.rb
+
+# treeder/bump is a docker image to bump the existing version
 docker run --rm -it -v $PWD:/app -w /app treeder/bump --filename $version_file "$(git log -1 --pretty=%B)"
 version=$(grep -m1 -Eo "[0-9]+\.[0-9]+\.[0-9]+" $version_file)
-echo "Version: $version"
 
 tag="$version"
 git add -u
