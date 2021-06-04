@@ -6,14 +6,15 @@ jobs:
     steps:
       - checkout
       - run:
+          name: version
+          command: ruby -v
+      - run:
           name: build
           command: gem build fdk.gemspec
       - run:
           name: build
           command: gem install --development *.gem
-      - run:
-          name: version
-          command: ruby -v
+
       - run:
           name: Run RuboCop
           command: rake rubocop
