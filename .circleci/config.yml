@@ -44,7 +44,7 @@ jobs:
 
     steps:
       - checkout
-      - deploy
+      - deploy:
           command: |
             if [[ "${CIRCLE_BRANCH}" == "runtime-2.7-test" ]]; then
               printenv DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
@@ -63,7 +63,7 @@ jobs:
 
     steps:
       - checkout
-      - deploy
+      - deploy:
         command: |
           if [[ "${CIRCLE_BRANCH}" == "runtime-2.7-test" ]]; then
             printenv DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
