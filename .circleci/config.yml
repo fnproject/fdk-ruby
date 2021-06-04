@@ -23,6 +23,7 @@ jobs:
           password: $DOCKER_PASS
           username: $DOCKER_USER
         image: cimg/ruby:2.7.3-node
+    working_directory: ~/fdk-ruby
     steps:
       - checkout
       - run:
