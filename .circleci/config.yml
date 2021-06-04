@@ -6,6 +6,11 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Set ruby version to 2.7
+          command: |
+            rvm install 2.7.3
+            echo . $(rvm 2.7.3 do rvm env --path) >> $BASH_ENV
+      - run:
           name: version
           command: ruby -v
       - run:
