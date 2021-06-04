@@ -57,7 +57,7 @@ jobs:
             fi
 
   release:
-    docker
+    docker:
       - image: cimg/ruby:2.7.3-node
       working_directory: ~/fdk-ruby
 
