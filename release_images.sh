@@ -15,6 +15,7 @@
 # limitations under the License.
 #
 
+set -xeuo pipefail
 
 user="fnproject"
 image="ruby"
