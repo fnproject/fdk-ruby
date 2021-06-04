@@ -1,4 +1,4 @@
-
+#!/usr/bin/env bash
 #
 # Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
 #
@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+set -exuo pipefail
 
 version_file=lib/fdk/version.rb
 docker run --rm -it -v $PWD:/app -w /app treeder/bump --filename $version_file "$(git log -1 --pretty=%B)"

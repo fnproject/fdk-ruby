@@ -1,10 +1,15 @@
 version: 2
 jobs:
   build:
-    docker:
-      - image: cimg/ruby:2.7.3-node
+    machine: true
+    working_directory: ~/fdk-ruby
     steps:
       - checkout
+      - run:
+          name: Set ruby version to 2.7
+          command: |
+            rvm install 2.7.3
+            echo . $(rvm 2.7.3 do rvm env --path) >> $BASH_ENV
       - run:
            name: build
            command: gem build fdk.gemspec
