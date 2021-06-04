@@ -18,6 +18,7 @@ version: 2
 
 jobs:
   build:
+    machine: true
     working_directory: ~/fdk-ruby
     steps:
       - checkout
