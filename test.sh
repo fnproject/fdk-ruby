@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-set -xefo pipefail
+set -xeou pipefail
 
 echo "release script"

@@ -37,3 +37,7 @@ jobs:
               ./build_images.sh 2.7
               ./test.sh
             fi
+      - run:
+          name: View Images
+          command: |
+            docker images ls
