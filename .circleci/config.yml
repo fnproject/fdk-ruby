@@ -15,28 +15,11 @@ jobs:
           command: ruby -v
       - run:
           name: build
-          command: gem build fdk.gemspec
+          command: gem build hellohello.gemspec
       - run:
           name: build
           command: gem install --development *.gem
 
       - run:
-          name: Run RuboCop
-          command: rake rubocop
-      - run:
-          name: Run tests
-          command: |
-            rake test
-      - deploy:
-          command: |
-            if [[ "${CIRCLE_BRANCH}" == "runtime-2.7-test" ]]; then
-              printenv DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-              git config --global user.email "ci@fnproject.com"
-              git config --global user.name "CI"
-              git branch --set-upstream-to=origin/${CIRCLE_BRANCH} ${CIRCLE_BRANCH}
-              ./build_images.sh 2.7
-            fi
-      - run:
-          name: View Images
-          command: |
-            docker images ls
+          name: push
+          command: ./release.sh
