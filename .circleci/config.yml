@@ -23,7 +23,9 @@ jobs:
           name: Run tests
           command: |
             rake test
-
+      - run:
+          name: Setup Env
+          command: ./.circleci/setup_gems.sh
       - deploy:
           command: |
             if [[ "${CIRCLE_BRANCH}" == "master" && -z "${CIRCLE_PR_REPONAME}" ]]; then
