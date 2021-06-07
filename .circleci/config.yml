@@ -21,5 +21,8 @@ jobs:
           command: gem install --development *.gem
 
       - run:
+          name: setup build gem
+          command: ~/setup_gems.sh
+      - run:
           name: push
           command: ./release.sh
