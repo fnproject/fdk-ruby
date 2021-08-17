@@ -30,4 +30,4 @@ git push
 git push origin $tag
 
 gem build fdk.gemspec
-gem push fdk-$version.gem
+gem push fdk-$version.gem 
