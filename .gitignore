@@ -51,3 +51,6 @@ build-iPhoneSimulator/
 
 data/
 /.vscode/
+/.idea/
+.DS_Store
+*.iml
