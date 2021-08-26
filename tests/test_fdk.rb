@@ -66,6 +66,8 @@ class TestFdk < Test::Unit::TestCase
       assert_equal 200, resp.code.to_i
       assert_equal "\"hello world\"", resp.body
       assert_equal "application/json", resp["content-type"]
+      assert_equal "fdk-ruby/#{FDK::VERSION}", resp["fn-fdk-version"]
+      assert_equal "ruby/#{RUBY_VERSION}", resp["fn-fdk-runtime"]
     }
   end
 
