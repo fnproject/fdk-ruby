@@ -13,10 +13,10 @@ Gem::Specification.new do |s|
   s.license     = "Apache-2.0"
   s.required_ruby_version = ">= 2.5"
 
-  s.add_runtime_dependency "json", "~> 2.1", ">= 2.1.0"
-  s.add_runtime_dependency "webrick", "~> 1.4", ">= 1.4.2"
-  s.add_development_dependency "net_http_unix", "~> 0.2", ">= 0.2.1"
-  s.add_development_dependency "rubocop", "~> 0.60"
+  s.add_runtime_dependency "json", "~> 2.5", ">= 2.5.1"
+  s.add_runtime_dependency "webrick", "~> 1.7", ">= 1.7.0"
+  s.add_development_dependency "net_http_unix", "~> 0.2", ">= 0.2.2"
+  s.add_development_dependency "rubocop", "~> 1.21"
 
   s.files = Dir["Rakefile", "{bin,lib,man,test,spec}/**/*", "README*", "LICENSE*"] & `git ls-files -z`.split("\0")
 end
