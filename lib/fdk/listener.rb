@@ -89,7 +89,7 @@ module FDK
     end
 
     def private_socket_path
-      socket_path + ".private"
+      "#{socket_path}.private"
     end
 
     def log_frame_header(headers)
