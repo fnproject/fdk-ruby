@@ -82,8 +82,7 @@ module FDK
     #   Replace X with the upper cased name of the config variable you set.
     #   e.g. minio_secret=secret will be exposed via MINIO_SECRET env var.
 
-    attr_reader :headers
-    attr_reader :response_headers
+    attr_reader :headers, :response_headers
 
     def initialize(headers_in, headers_out)
       @headers = headers_in
@@ -123,8 +122,7 @@ module FDK
   # Represents the context data (inbound && outbound)
   # for the execution passed as HTTP headers
   class HTTPContext
-    attr_reader :headers
-    attr_reader :response_headers
+    attr_reader :headers, :response_headers
 
     def initialize(ctx)
       fn_http_h_ = "fn-http-h-"
