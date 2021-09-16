@@ -20,6 +20,7 @@ module FDK
   # Function represents a function function or lambda
   class Function
     attr_reader :format, :function
+
     def initialize(function:, format:)
       raise "'#{format}' not supported in Ruby FDK." unless format == "http-stream"
 
