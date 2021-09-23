@@ -1,0 +1,14 @@
+ARG RUBY_VERSION=latest
+FROM fnproject/ruby:${RUBY_VERSION}-dev as build-stage
+ARG PKG_VERSION="1.0.0_SNAPSHOT"
+WORKDIR /function
+ADD Gemfile* /function/
+RUN bundle install
+COPY . /function
+RUN gem install fdk-${PKG_VERSION}.gem
+FROM fnproject/ruby:${RUBY_VERSION}
+WORKDIR /function
+COPY --from=build-stage /usr/lib/ruby/gems/ /usr/lib/ruby/gems/
+COPY . /function/
+RUN chmod -R o+r /function
+ENTRYPOINT ["ruby", "func.rb"]
