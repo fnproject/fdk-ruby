@@ -1,0 +1,16 @@
+^\.circleci/.*
+^examples/.*
+^images/.*
+^lib/.*
+^tests/.*
+^\.gitignore$
+^\.rubocop\.yml$
+^LICENSE$
+^NOTICE\.txt$
+^README\.md$
+^Rakefile$
+^THIRD_PARTY_LICENSES\.txt$
+^build_images\.sh$
+^fdk\.gemspec$
+^release\.sh$
+^release_images\.sh$
