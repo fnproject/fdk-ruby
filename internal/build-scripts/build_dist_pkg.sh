@@ -18,4 +18,3 @@ echo "Ruby Version"
 ruby --version
 
 gem build fdk.gemspec -o fdk-${BUILD_VERSION}.gem
-
