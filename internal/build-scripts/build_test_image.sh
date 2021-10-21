@@ -25,7 +25,7 @@ pkg_version=${BUILD_VERSION}
   version="$(awk '/^runtime:/ { print $2 }' func.yaml)"
   image_identifier="${version}-${BUILD_VERSION}"
 
-  docker build -t fnproject/${name}:${image_identifier} -f Dockerfile --build-arg RUBY_VERSION=${RUBY_version} --build-arg PKG_VERSION=${pkg_version}  .
+  docker build -t fnproject/${name}:${image_identifier} -f Build_file --build-arg RUBY_VERSION=${RUBY_version} --build-arg PKG_VERSION=${pkg_version}  .
   rm -rf fdk-${pkg_version}.gem
   popd
 
