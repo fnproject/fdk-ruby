@@ -26,5 +26,5 @@ fi
 rubyversion=$1
 
 echo $rubyversion
-pushd internal/images/build-stage/${rubyversion} && docker build -t fnproject/ruby:${rubyversion}-dev . && popd
-pushd internal/images/runtime/${rubyversion} && docker build -t fnproject/ruby:${rubyversion} . && popd
+pushd internal/images/build-stage/${rubyversion} && docker build -t fnproject/ruby:${rubyversion}-alpine-dev . && popd
+pushd internal/images/runtime/${rubyversion} && docker build -t fnproject/ruby:${rubyversion}-alpine . && popd
