@@ -30,5 +30,5 @@ image="ruby"
 
 echo "Pushing release images for Ruby Runtime Version ${rubyversion}"
 
-docker push ${user}/${image}:${rubyversion}-alpine
-docker push ${user}/${image}:${rubyversion}-alpine-dev
+docker push ${user}/${image}:${rubyversion}
+docker push ${user}/${image}:${rubyversion}-dev
