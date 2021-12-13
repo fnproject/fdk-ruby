@@ -1,2 +1,11 @@
-FROM docker-remote.artifactory.oci.oraclecorp.com/ruby:2.7.3-alpine3.12
-RUN apk add --no-cache wget curl alpine-sdk bash
+FROM docker-remote.artifactory.oci.oraclecorp.com/oraclelinux:8-slim
+
+RUN microdnf module enable ruby:2.7 && \
+      microdnf install ruby ruby-devel rubygems make gcc glibc system-rpm-config git && \
+      microdnf module reset ruby && \
+      microdnf clean all
+
+RUN gem install --no-document bundler
+
+CMD ["ruby", "-v"]
+

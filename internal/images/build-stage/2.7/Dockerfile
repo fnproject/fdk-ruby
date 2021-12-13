@@ -1,8 +1,17 @@
-FROM docker-remote.artifactory.oci.oraclecorp.com/alpine:3.12
+FROM docker-remote.artifactory.oci.oraclecorp.com/oraclelinux:8-slim
 
-RUN apk add --no-cache curl git make \
-    libssl1.1 build-base libxml2-dev libxslt-dev libbz2 libevent-dev libffi-dev glib-dev ncurses-dev readline-dev yaml-dev zlib-dev \
-    libpq sqlite-dev postgresql-dev \
-    ruby-dev ruby ruby-io-console ruby-bundler
+ENV GEM_HOME=/usr/lib/ruby/gems
+ENV GEM_PATH=/usr/lib/ruby/gems
 
-RUN gem install --no-document bundler
+RUN microdnf module enable ruby:2.7 && \
+      microdnf install ruby ruby-devel rubygems \
+            make gcc glibc system-rpm-config && \
+      microdnf module reset ruby && \
+      microdnf clean all && \
+      mkdir -p /usr/lib/ruby/gems && \
+      echo "gem: --install-dir=$GEM_HOME  --bindir /usr/local/bin" > ~/.gemrc
+
+RUN gem install --no-document bundler rake
+
+CMD ["ruby", "-v"]
+
