@@ -17,3 +17,11 @@ echo ${OCIR_PASSWORD} | docker login --username "${OCIR_USERNAME}" --password-st
   source internal/build-scripts/build_test_image.sh internal/tests-images/ruby2.7/runtime-version-test 2.7
   source internal/build-scripts/build_test_image.sh internal/tests-images/ruby2.7/oci-sdk-test 2.7
 )
+
+# Ruby 3.1
+(
+  source internal/build-scripts/build_test_image.sh internal/tests-images/ruby3.1/hello-world-test 3.1
+  source internal/build-scripts/build_test_image.sh internal/tests-images/ruby3.1/timeout-test 3.1
+  source internal/build-scripts/build_test_image.sh internal/tests-images/ruby3.1/runtime-version-test 3.1
+  source internal/build-scripts/build_test_image.sh internal/tests-images/ruby3.1/oci-sdk-test 3.1
+)

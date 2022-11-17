@@ -26,5 +26,9 @@ fi
 rubyversion=$1
 
 echo $rubyversion
-pushd internal/images/build-stage/${rubyversion} && docker build -t fnproject/ruby:${rubyversion}-dev . && popd
-pushd internal/images/runtime/${rubyversion} && docker build -t fnproject/ruby:${rubyversion} . && popd
+
+#Login to OCIR
+echo ${OCIR_PASSWORD} | docker login --username "${OCIR_USERNAME}" --password-stdin ${OCIR_REGION}
+
+pushd internal/images/build-stage/${rubyversion} && docker buildx build --push --platform linux/amd64,linux/arm64 -t ${OCIR_REGION}/${OCIR_LOC}/ruby:${rubyversion}-${BUILD_VERSION}-dev . && popd
+pushd internal/images/runtime/${rubyversion} && docker buildx build --push --platform linux/amd64,linux/arm64 -t ${OCIR_REGION}/${OCIR_LOC}/ruby:${rubyversion}-${BUILD_VERSION} . && popd

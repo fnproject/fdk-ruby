@@ -1,0 +1,7 @@
+schema_version: 20180708
+name: timeout-fn
+version: 0.0.61
+runtime: ruby3.1
+build_image: fnproject/ruby:3.1-dev
+run_image: fnproject/ruby:3.1
+entrypoint: ruby func.rb

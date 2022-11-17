@@ -1,12 +1,17 @@
 ARG RUBY_VERSION=latest
-FROM fnproject/ruby:${RUBY_VERSION}-dev as build-stage
+ARG OCIR_REGION=OCIR_REGION
+ARG OCIR_LOC=OCIR_LOC
+ARG BUILD_VERSION=BUILD_VERSION
+
+FROM ${OCIR_REGION}/${OCIR_LOC}/ruby:${RUBY_VERSION}-${BUILD_VERSION}-dev as build-stage
 ARG PKG_VERSION="1.0.0-SNAPSHOT"
 WORKDIR /function
 ADD Gemfile* /function/
 RUN bundle install
 COPY . /function
 RUN gem install fdk-${PKG_VERSION}.gem
-FROM fnproject/ruby:${RUBY_VERSION}
+
+FROM ${OCIR_REGION}/${OCIR_LOC}/ruby:${RUBY_VERSION}-${BUILD_VERSION}
 WORKDIR /function
 COPY --from=build-stage /usr/lib/ruby/gems/ /usr/lib/ruby/gems/
 COPY . /function/

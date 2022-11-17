@@ -3,7 +3,7 @@ FROM --platform=$TARGETPLATFORM container-registry.oracle.com/os/oraclelinux:8-s
 ENV GEM_HOME=/usr/lib/ruby/gems
 ENV GEM_PATH=/usr/lib/ruby/gems
 
-RUN microdnf module enable ruby:2.7 && \
+RUN microdnf module enable ruby:3.1 && \
       microdnf install ruby ruby-devel rubygems \
             make gcc glibc system-rpm-config && \
       microdnf module reset ruby && \

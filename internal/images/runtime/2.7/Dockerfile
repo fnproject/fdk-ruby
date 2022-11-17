@@ -1,4 +1,4 @@
-FROM docker-remote.artifactory.oci.oraclecorp.com/oraclelinux:8-slim
+FROM --platform=$TARGETPLATFORM container-registry.oracle.com/os/oraclelinux:8-slim
 
 ENV GEM_HOME=/usr/lib/ruby/gems
 ENV GEM_PATH=/usr/lib/ruby/gems

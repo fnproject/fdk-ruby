@@ -30,5 +30,5 @@ image="ruby"
 
 echo "Pushing release images for Ruby Runtime Version ${rubyversion}"
 
-docker push ${user}/${image}:${rubyversion}
-docker push ${user}/${image}:${rubyversion}-dev
+./regctl image copy ${OCIR_REGION}/${OCIR_LOC}/ruby:${rubyversion}-${BUILD_VERSION}-dev ${user}/${image}:${rubyversion}-dev
+./regctl image copy ${OCIR_REGION}/${OCIR_LOC}/ruby:${rubyversion}-${BUILD_VERSION} ${user}/${image}:${rubyversion}
