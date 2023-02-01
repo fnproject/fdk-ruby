@@ -6,7 +6,7 @@ ruby --version
 # Create a builder instance
 (
   docker buildx rm builderInstance || true
-  docker buildx create --name builderInstance --driver docker-container --platform linux/amd64,linux/arm64
+  docker buildx create --name builderInstance --driver-opt=image=docker-remote.artifactory.oci.oraclecorp.com/moby/buildkit:buildx-stable-1 --platform linux/amd64,linux/arm64
   docker buildx use builderInstance
 )
 
