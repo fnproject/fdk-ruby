@@ -27,8 +27,13 @@ fi
 rubyversion=$1
 user="fnproject"
 image="ruby"
+OCIR_REPO=iad.ocir.io/oraclefunctionsdevelopm
+ARTIFACTORY_REPO=odo-docker-signed-local.artifactory.oci.oraclecorp.com:443
 
 echo "Pushing release images for Ruby Runtime Version ${rubyversion}"
 
-./regctl image copy ${OCIR_REGION}/${OCIR_LOC}/ruby:${rubyversion}-${BUILD_VERSION}-dev ${user}/${image}:${rubyversion}-dev
-./regctl image copy ${OCIR_REGION}/${OCIR_LOC}/ruby:${rubyversion}-${BUILD_VERSION} ${user}/${image}:${rubyversion}
+./regctl image copy ${OCIR_REGION}/${OCIR_LOC}/ruby:${rubyversion}-${BUILD_VERSION}-dev ${OCIR_REPO}/${user}/${image}:${rubyversion}-dev
+./regctl image copy ${OCIR_REGION}/${OCIR_LOC}/ruby:${rubyversion}-${BUILD_VERSION}-dev ${ARTIFACTORY_REPO}/${user}/${image}:${rubyversion}-dev
+
+./regctl image copy ${OCIR_REGION}/${OCIR_LOC}/ruby:${rubyversion}-${BUILD_VERSION} ${OCIR_REPO}/${user}/${image}:${rubyversion}
+./regctl image copy ${OCIR_REGION}/${OCIR_LOC}/ruby:${rubyversion}-${BUILD_VERSION} ${ARTIFACTORY_REPO}/${user}/${image}:${rubyversion}
