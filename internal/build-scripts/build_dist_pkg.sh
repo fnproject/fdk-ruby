@@ -17,4 +17,6 @@
 echo "Ruby Version"
 ruby --version
 
+git config --global --add safe.directory /build
+
 gem build fdk.gemspec -o fdk-${BUILD_VERSION}.gem
