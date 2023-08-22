@@ -40,7 +40,7 @@ module FDK
 
     def [](key)
       h = @headers[header_key(key)]
-      return h[0] unless h.nil?
+      h[0] unless h.nil?
     end
 
     def each(&block)
