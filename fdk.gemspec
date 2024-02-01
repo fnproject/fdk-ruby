@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.summary     = "Ruby FDK for Fn Project"
   s.description = "Ruby Function Developer Kit for Fn Project."
   s.license     = "Apache-2.0"
-  s.required_ruby_version = ">= 2.5"
+  s.required_ruby_version = ">= 3.0"
 
   s.add_runtime_dependency "json", "~> 2.5", ">= 2.5.1"
   s.add_runtime_dependency "webrick", "~> 1.7", ">= 1.7.0"

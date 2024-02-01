@@ -19,6 +19,7 @@ require "test/unit"
 require "tmpdir"
 require "net_http_unix"
 require "json"
+require "stringio"
 
 def testfn(context:, input:)
   "Hello world from method"
