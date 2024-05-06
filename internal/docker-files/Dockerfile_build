@@ -1,11 +1,15 @@
 FROM container-registry.oracle.com/os/oraclelinux:8-slim
 
-RUN microdnf module enable ruby:3.1 && \
-      microdnf install ruby ruby-devel rubygems make gcc glibc system-rpm-config git && \
-      microdnf module reset ruby && \
-      microdnf clean all
+RUN microdnf update && \
+    microdnf module enable ruby:3.1 && \
+    microdnf install ruby ruby-devel rubygems make gcc glibc system-rpm-config git && \
+    microdnf module reset ruby && \
+    microdnf clean all
 
-RUN gem install --no-document bundler
+RUN gem install --no-document bundler && \
+    gem install stringio -v '~> 3.0.1, >= 3.0.1.2' && \
+    gem install rdoc -v '~> 6.3.4, >= 6.3.4.1'
+
 
 CMD ["ruby", "-v"]
 
