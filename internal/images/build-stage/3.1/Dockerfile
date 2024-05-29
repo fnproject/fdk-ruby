@@ -6,6 +6,7 @@ ENV GEM_PATH=/usr/lib/ruby/gems
 RUN microdnf module enable ruby:3.1 && \
       microdnf install ruby ruby-devel rubygems \
             make gcc glibc system-rpm-config && \
+      microdnf install --enablerepo=ol8_codeready_builder libyaml-devel && \
       microdnf module reset ruby && \
       microdnf clean all && \
       mkdir -p /usr/lib/ruby/gems && \
