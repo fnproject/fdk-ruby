@@ -3,14 +3,21 @@ FROM container-registry.oracle.com/os/oraclelinux:8-slim
 RUN microdnf update && \
     microdnf module enable ruby:3.1 && \
     microdnf install ruby ruby-devel rubygems make gcc glibc system-rpm-config git openssl-devel && \
+    microdnf install --enablerepo=ol8_codeready_builder libyaml-devel && \
     microdnf module reset ruby && \
     microdnf clean all
 
 RUN gem install --no-document bundler && \
     gem install stringio -v '~> 3.1.0, >= 3.1.0' && \
-    gem install rdoc -v '~> 6.3.4, >= 6.3.4.1' && \
-    gem install openssl -v '~> 3.2.0, >= 3.2.0' -- --with-openssl-dir=/usr
+    gem install rdoc -v '~> 6.4.1.1, >= 6.4.1.1' && \
+    gem install openssl -v '~> 3.2.0, >= 3.2.0' -- --with-openssl-dir=/usr && \
+    gem cleanup
 
+# stringio-3.0.1 and openssl-3.0.1 are default gems so the gem cli won't
+# uninstall them even though we've replaced them with a newer versions
+# Manually deleting them works
+RUN find / -name '*stringio-3.0.1*' -exec rm -rf '{}' + && \
+    find / -name '*openssl-3.0.1*' -exec rm -rf '{}' +
 
 CMD ["ruby", "-v"]
 
