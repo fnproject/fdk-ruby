@@ -38,4 +38,5 @@ if [ "${RUN_TYPE}" = "release" ]; then
 
   set -x
   ./internal/release/release_image.sh 3.1
+  ./internal/release/release_image.sh 3.3
 fi

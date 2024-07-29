@@ -1,0 +1,2 @@
+# Add any dependencies for the test function except fdk
+source 'http://www.rubygems.org' 

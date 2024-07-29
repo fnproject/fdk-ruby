@@ -1,6 +1,6 @@
 FROM container-registry.oracle.com/os/oraclelinux:8-slim
 
-RUN microdnf module enable ruby:3.1 && \
+RUN microdnf module enable ruby:3.3 && \
       microdnf install ruby ruby-devel rubygems make gcc glibc system-rpm-config && \
       microdnf module reset ruby && \
       microdnf clean all

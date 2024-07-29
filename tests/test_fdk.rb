@@ -264,7 +264,7 @@ class TestFdk < Test::Unit::TestCase
 
   def wait_for_socket(file)
     for i in 0..100
-      if File.exists? file
+      if File.exist? file
         return
       else
         sleep 0.1
