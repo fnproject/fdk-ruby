@@ -1,0 +1,17 @@
+ARG BUILD_IMAGE_VERSION
+ARG RUNTIME_IMAGE_VERSION
+
+FROM odo-docker-signed-local.artifactory.oci.oraclecorp.com/fdk-ruby:${BUILD_IMAGE_VERSION} as build-stage
+ARG FDK_VERSION
+WORKDIR /function
+ADD Gemfile* /function/
+RUN bundle install
+COPY . /function
+RUN gem install fdk-${FDK_VERSION}.gem
+
+FROM odo-docker-signed-local.artifactory.oci.oraclecorp.com/fdk-ruby:${RUNTIME_IMAGE_VERSION}
+WORKDIR /function
+COPY --from=build-stage /usr/lib/ruby/gems/ /usr/lib/ruby/gems/
+COPY . /function/
+RUN chmod -R o+r /function
+ENTRYPOINT ["ruby", "func.rb"]
