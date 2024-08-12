@@ -1,10 +1,11 @@
 RAW_VERSION=$(shell grep 'VERSION =' ./lib/fdk/version.rb | cut -d '"' -f 2)
-FDK_VERSION=$(RAW_VERSION)$(if $(BLD_BRANCH_SUFFIX),.$(BLD_NUMBER)$(BLD_BRANCH_SUFFIX),)
+FDK_VERSION=$(RAW_VERSION).$(BLD_NUMBER)$(BLD_BRANCH_SUFFIX)
 
 .PHONY: set_fdk_version build set_image_version setup_test_image_build
 
 set_fdk_version:
 	echo "version: \"$(FDK_VERSION)\"" > $(BLD_INPUT_DIR)/buildOverrideVariables.conf
+	echo "fdk_version=$(FDK_VERSION)" >> $(BLD_INPUT_DIR)/exportVariables.env
 
 build:
 	set -e

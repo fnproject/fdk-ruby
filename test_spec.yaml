@@ -1,0 +1,121 @@
+version: 1.0.1
+component: test
+
+failImmediatelyOnError: true
+
+timeoutInSeconds: 36000
+
+env:
+  vaultVariables:
+    FDK_CONFIG_PRIVATE_KEY: ocid1.vaultsecret.oc1.phx.amaaaaaaepf6idiag6rczemvmoik7pf7yy44sylin2okcskx6exxqw7lv2nq
+
+inputArtifacts:
+  - name: downloadDockerCredentialHelper
+    location: ${OCI_WORKSPACE_DIR}/input
+    url: https://pipelines.artifactory.us-phoenix-1.oci.oracleiaas.com/ocir-overlay-global-yum-local/docker-credential-ocir-996.1f4a1425ed3-1.noarch.rpm
+  - name: downloadRegctl
+    location: ${OCI_WORKSPACE_DIR}/input
+    url: https://pipelines.artifactory.us-phoenix-1.oci.oracleiaas.com/faas-release-generic-local/regctl/regctl-linux-arm64
+  - name: downloadTestHarness
+    location: ${OCI_WORKSPACE_DIR}/input
+    url: https://pipelines.artifactory.us-phoenix-1.oci.oracleiaas.com/faas-release-generic-local/fdk-integration-test/fdk-integration-test-${FDK_INTEGRATION_TEST_VERSION}.tar.gz
+
+steps:
+  - type: shell
+    name: Setup Environment
+    command: |
+      set -ex
+      pushd ${OCI_WORKSPACE_DIR}/input
+      sudo yum localinstall -y docker-credential-ocir-996.1f4a1425ed3-1.noarch.rpm
+      sudo yum install -y jq jdk1.8
+      popd
+
+      sudo docker login -u BEARER_TOKEN -p $(echo "${FAAS_OCIR_REGION}" | docker-credential-ocir get | jq -r .Secret) "${FAAS_OCIR_REGION}"
+
+      cp ${OCI_WORKSPACE_DIR}/input/regctl-linux-arm64 ${OCI_WORKSPACE_DIR}/regctl
+      chmod 755 ${OCI_WORKSPACE_DIR}/regctl
+
+      ${OCI_WORKSPACE_DIR}/regctl registry login -u BEARER_TOKEN -p $(echo "${FAAS_OCIR_REGION}" | docker-credential-ocir get | jq -r .Secret) "${FAAS_OCIR_REGION}"
+
+  - type: shell
+    name: Copy base images to OCIR
+    command: |
+      set -ex
+      declare -a ruby_versions=('3.1' '3.3')
+      declare -a suffixes=('' '-dev')
+      for ruby in "${ruby_versions[@]}"; do
+          for suffix in "${suffixes[@]}"; do
+              src="odo-docker-signed-local.pipelines.artifactory.us-phoenix-1.oci.oracleiaas.com/fdk-ruby:${ruby}-${FDK_VERSION}${suffix}"
+              dst="${FAAS_OCIR_REGION}/oraclefunctionsdevelopm/test-functions/ruby:${ruby}-${FDK_VERSION}${suffix}"
+              ${OCI_WORKSPACE_DIR}/regctl image copy -v=DEBUG "$src" "$dst"
+          done
+      done
+
+  - type: shell
+    name: Copy test images to OCIR
+    command: |
+      set -ex
+      function copy_image() {
+          local image="$1"
+          local ruby_version="$2"
+          local src="odo-docker-signed-local.pipelines.artifactory.us-phoenix-1.oci.oracleiaas.com/faas-${image}:ruby-${ruby_version}-${FDK_VERSION}"
+          local dst="${FAAS_OCIR_REGION}/oraclefunctionsdevelopm/test-functions/${image}:ruby${ruby_version}-${FDK_VERSION}"
+          ${OCI_WORKSPACE_DIR}/regctl image copy -v=DEBUG "$src" "$dst"
+      }
+      
+      copy_image hello-world-fn 3.1
+      copy_image oci-sdk-fn 3.1
+      copy_image runtime-version-fn 3.1
+      copy_image timeout-fn 3.1
+      
+      copy_image hello-world-fn 3.3
+      copy_image oci-sdk-fn 3.3
+      copy_image runtime-version-fn 3.3
+      copy_image timeout-fn 3.3
+
+  - type: shell
+    name: Setup User
+    command: |
+      echo ${FDK_CONFIG_FILE_CONTENTS} | tr ' ' $'\n' | tee /tmp/config_fdk
+      echo "${FDK_CONFIG_PRIVATE_KEY}" > /tmp/oci_api_key_fdk.pem
+      ls -al /tmp/config_fdk /tmp/oci_api_key_fdk.pem
+
+  - type: shell
+    name: Run Integration Test Ruby 3.3
+    command: |
+      mkdir -p integration_test_ruby3.3
+      cd integration_test_ruby3.3
+      tar zxvf ${OCI_WORKSPACE_DIR}/input/fdk-integration-test-${FDK_INTEGRATION_TEST_VERSION}.tar.gz .
+
+      CLASSPATH=$(echo *.jar | tr ' ' ':')
+      export AUTH_CONF_FILE_PATH=/tmp/config_fdk
+      export REGION=us-ashburn-1
+      export STAGE=teamcity
+      export MULTI_ARCH_ENABLED=True
+      export BUILD_VERSION=${FDK_VERSION}
+      export OCIR_LOC="oraclefunctionsdevelopm/test-functions"
+      export OCIR_REGION="iad.ocir.io"
+
+      export FDK_RUNTIME=ruby3.3
+      export test=RubyRuntimeVersionIntegrationTest,FunctionsIntegrationTest,OciSdkUsageIntegrationTest
+      java -jar junit-platform-console-standalone.jar -cp "$CLASSPATH" --scan-class-path
+
+  - type: shell
+    name: Run Integration Test Ruby 3.1
+    command: |
+      mkdir -p integration_test_ruby3.1
+      cd integration_test_ruby3.1
+      tar zxvf ${OCI_WORKSPACE_DIR}/input/fdk-integration-test-${FDK_INTEGRATION_TEST_VERSION}.tar.gz .
+
+      CLASSPATH=$(echo *.jar | tr ' ' ':')
+      export AUTH_CONF_FILE_PATH=/tmp/config_fdk
+      export REGION=us-ashburn-1
+      export STAGE=teamcity
+      export MULTI_ARCH_ENABLED=True
+      export BUILD_VERSION=${FDK_VERSION}
+      export OCIR_LOC="oraclefunctionsdevelopm/test-functions"
+      export OCIR_REGION="iad.ocir.io"
+
+      export FDK_RUNTIME=ruby3.1
+      export test=RubyRuntimeVersionIntegrationTest,FunctionsIntegrationTest,OciSdkUsageIntegrationTest
+      java -jar junit-platform-console-standalone.jar -cp "$CLASSPATH" --scan-class-path

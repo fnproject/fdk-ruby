@@ -22,5 +22,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "test-unit", "~> 2.0"
 
   s.files = Dir["Rakefile", "{bin,lib,man,test,spec}/**/*", "README*",
-                "LICENSE*"] & `git ls-files -z`.split("\0")
+                "LICENSE*"]
 end
