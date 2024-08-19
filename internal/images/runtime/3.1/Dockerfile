@@ -18,6 +18,7 @@ RUN microdnf install findutils && \
     find / -name '*openssl-3.0.1*' -exec rm -rf '{}' + && \
     find / -name '*rdoc-6.4.0*' -exec rm -rf '{}' + && \
     microdnf remove findutils && \
+    microdnf remove rubygem-rdoc & \
     microdnf clean all
 
 RUN groupadd --system --gid 1000 fn && adduser --uid 1000 --gid 1000 fn
