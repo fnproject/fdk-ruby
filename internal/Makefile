@@ -1,5 +1,10 @@
 RAW_VERSION=$(shell grep 'VERSION =' ./lib/fdk/version.rb | cut -d '"' -f 2)
+
+ifeq ($(RELEASE), true)
+FDK_VERSION=$(RAW_VERSION)
+else
 FDK_VERSION=$(RAW_VERSION).$(BLD_NUMBER)$(BLD_BRANCH_SUFFIX)
+endif
 
 .PHONY: set_fdk_version build set_image_version setup_test_image_build
 
