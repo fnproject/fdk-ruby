@@ -1,5 +1,4 @@
 RAW_VERSION=$(shell grep 'VERSION =' ./lib/fdk/version.rb | cut -d '"' -f 2)
-
 ifeq ($(RELEASE), true)
 FDK_VERSION=$(RAW_VERSION)
 else
