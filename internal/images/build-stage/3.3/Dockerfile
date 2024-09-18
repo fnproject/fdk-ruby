@@ -19,6 +19,6 @@ RUN gem install --no-document bundler rake && \
 # prism-0.19.0 is a default gem so the gem cli won't
 # uninstall it even though we've replaced it with a newer version
 # Manually deleting them works
-RUN rm -rf '/usr/share/gems/specifications/default/prism-0.19.0.gemspec' \;
+RUN rm -rf $(ruby -e 'print Gem.default_specifications_dir')/prism-0.19*.gemspec
 
 CMD ["ruby", "-v"]
