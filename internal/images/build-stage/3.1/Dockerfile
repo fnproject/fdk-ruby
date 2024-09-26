@@ -16,13 +16,15 @@ RUN gem install --no-document bundler rake & \
    gem install --no-document stringio -v '~> 3.1.0, >= 3.1.0' && \
    gem install --no-document rdoc -v '~> 6.4.1.1, >= 6.4.1.1' && \
    gem install --no-document openssl -v '~> 3.2.0, >= 3.2.0' -- --with-openssl-dir=/usr && \
+   gem install --no-document prism -v '~> 1.0' && \
    gem cleanup
 
 # stringio-3.0.1 and openssl-3.0.1 are default gems so the gem cli won't
 # uninstall them even though we've replaced them with a newer versions
 # Manually deleting them works
 RUN find / -name '*stringio-3.0.1*' -exec rm -rf '{}' + && \
-   find / -name '*openssl-3.0.1*' -exec rm -rf '{}' +
+   find / -name '*openssl-3.0.1*' -exec rm -rf '{}' + && \
+   rm -rf $(ruby -e 'print Gem.default_specifications_dir')/prism-0.19*.gemspec
 
 CMD ["ruby", "-v"]
 

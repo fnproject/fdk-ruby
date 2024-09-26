@@ -17,6 +17,7 @@ RUN microdnf install findutils && \
     find / -name '*stringio-3.0.1*' -exec rm -rf '{}' + && \
     find / -name '*openssl-3.0.1*' -exec rm -rf '{}' + && \
     find / -name '*rdoc-6.4.0*' -exec rm -rf '{}' + && \
+    rm -rf $(ruby -e 'print Gem.default_specifications_dir')/prism-0.19*.gemspec + && \
     microdnf remove findutils && \
     microdnf remove rubygem-rdoc & \
     microdnf clean all
