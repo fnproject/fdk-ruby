@@ -4,5 +4,5 @@ Style/DateTime:
 Style/StringLiterals:
   EnforcedStyle: double_quotes
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 100
