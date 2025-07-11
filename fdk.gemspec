@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "net_http_unix", "~> 0.2", ">= 0.2.2"
   s.add_development_dependency "rubocop", "~> 1.21"
   s.add_development_dependency "test-unit", "~> 2.0"
+  s.add_runtime_dependency "uri", ">= 0.11.3", "< 2.0"
 
   s.files = Dir["Rakefile", "{bin,lib,man,test,spec}/**/*", "README*",
                 "LICENSE*"]
