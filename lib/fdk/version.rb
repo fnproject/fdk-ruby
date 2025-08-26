@@ -17,5 +17,5 @@
 #
 
 module FDK
-  VERSION = "0.0.83"
+  VERSION = "0.0.85"
 end
