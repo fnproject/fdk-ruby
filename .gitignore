@@ -54,3 +54,5 @@ data/
 /.idea/
 .DS_Store
 *.iml
+
+.csis
