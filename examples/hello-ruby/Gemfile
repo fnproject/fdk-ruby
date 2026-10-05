@@ -1,3 +1,3 @@
-source 'https://rubygems.org' do
+source 'https://artifactory-builds.oci.oraclecorp.com/rubygems-remote/' do
   gem 'fdk','>= 0.0.20'
 end
